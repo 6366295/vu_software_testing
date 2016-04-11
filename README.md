@@ -1,4 +1,17 @@
-# Requirements Specification
+# Telephone Switching Simulation
+
+This project simulates basic telephone functions. You will not be hooked up to real phones, but instead will input commands from the keyboard, and display results.
+
+Your system will make phone calls, as well as perform three-way conferences and transfers.
+
+## To do list
+
+[ ] Formalize requirements specification
+[ ] Program the program
+[ ] Create test plan
+[ ] Execute test plan
+
+## Requirements Specification (Informal)
 
 1. At startup, the program will read a file containing phone numbers and names. There may be up to 20 such pairs, one per line. 
 2. The phone numbers are 5 digits long, all numbers. A phone number may begin with 0.
