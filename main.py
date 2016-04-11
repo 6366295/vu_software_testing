@@ -8,15 +8,16 @@ phonenumbers = {}
 
 def parse_phonebook():
 
-
-    with open(FILENAME) as f:
-        for line in f:
-            number, name = line.split(' ', 1)
-            number = number.strip()
-            name = name.strip()
-            if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
-                phonenumbers[number] = name
-
+    try:
+        with open(FILENAME) as f:
+            for line in f:
+                number, name = line.split(' ', 1)
+                number = number.strip()
+                name = name.strip()
+                if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
+                    phonenumbers[number] = name
+    except:
+        print "Could not load phonebook!"
 
 
 def main():
