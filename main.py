@@ -32,10 +32,9 @@ def cmdline_reader():
 	try:
 		cmd = raw_input("> ")
 	except (KeyboardInterrupt, EOFError) as e:
-		# Needed for split function
-		cmd = ""
-
 		print e
+		return ""
+		
 	return cmd
 
 def cmd_interpreter(cmd):
