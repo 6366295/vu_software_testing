@@ -1,10 +1,10 @@
-from commands import cmd_dict
+from commands import UserCommands
+from phone_data import PhoneData
 
 import sys
 
-phonebook = {}
-
 def parse_phonebook():
+	phonebook = {}
 	i = 0
 
 	# Use a default input, if non is given
@@ -24,7 +24,8 @@ def parse_phonebook():
 				name = name.strip()
 
 				if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
-					phonebook[number] = name
+					#phonebook[number] = name
+					phonebook[i] = PhoneData(number, name)
 					i = i+1
 
 					# Limit phonebook entries number to 20
@@ -41,7 +42,7 @@ def parse_phonebook():
 
 	print "Finished loading in " + str(len(phonebook)) + " numbers"
 
-	return 0
+	return phonebook
 
 def cmdline_reader():
 	# Catch SIGINTS (Ctrl-C) and EOFError (Ctrl-D)
@@ -53,7 +54,7 @@ def cmdline_reader():
 
 	return cmd
 
-def cmd_interpreter(cmd):
+def cmd_interpreter(cmd, cmd_dict):
 	# Split command string
 	# TODO: This makes exiting using "phone exit phone" possible
 	#         but not through "exit phone somethiing"
@@ -63,11 +64,11 @@ def cmd_interpreter(cmd):
 	# TODO: No feedback though
 	try:
 		if len(cmd) == 1:
-			cmd_dict[cmd[0]](0, 0)
+			cmd_dict[cmd[0]]()
 		elif len(cmd) == 2:
-			cmd_dict[cmd[0]](cmd[1], 0)
+			cmd_dict[cmd[0]](phone=cmd[1])
 		else:
-			cmd_dict[cmd[1]](cmd[0], cmd[2])
+			cmd_dict[cmd[1]](phone1=cmd[0], phone2=cmd[2])
 	except KeyError as e:
 		return 1
 
@@ -82,12 +83,25 @@ def main():
 	print "|-------------------------------------------------|" 
 	print ""
 
-	parse_phonebook()
+	phonebook = parse_phonebook()
+
+	cmdlist = UserCommands(phonebook)
+
+	cmd_dict = {
+		"exit" : cmdlist.cmd_exit,
+		"help" : cmdlist.cmd_help,
+		"call" : cmdlist.cmd_call,
+		"offhook" : cmdlist.cmd_offhook,
+		"onhook" : cmdlist.cmd_onhook,
+		"transfer" : cmdlist.cmd_transfer,
+		"conference" : cmdlist.cmd_conference,
+		"status" : cmdlist.cmd_status
+	}
 
 	while 1:
 		cmd = cmdline_reader()
 
-		cmd_interpreter(cmd)
+		cmd_interpreter(cmd, cmd_dict)
 
 	return 0
 
