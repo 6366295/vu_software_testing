@@ -5,11 +5,15 @@ import sys
 phonebook = {}
 
 def parse_phonebook():
+	i = 0
+
 	# Use a default input, if non is given
 	try:
 		FILENAME = sys.argv[1]
 	except IndexError as e:
 		FILENAME = "phonebook.txt"
+
+	print "Loading in '" + FILENAME + "'"
 
 	# Load in a phonebook
 	try:
@@ -21,11 +25,23 @@ def parse_phonebook():
 
 				if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
 					phonebook[number] = name
+					i = i+1
+
+					# Limit phonebook entries number to 20
+					# Ommitted numbers don't count
+					if i > 20:
+						break
+				else:
+					print "Ommitted entry: [" + str(number) + ", " + str(name) + "]	"
 	except:
 		print "Phonebook file '" + FILENAME + "' could not be loaded!"
 		print "Simulation Stopped"
 
 		sys.exit()
+
+	print "Finished loading in " + str(len(phonebook)) + " numbers"
+
+	return 0
 
 def cmdline_reader():
 	# Catch SIGINTS (Ctrl-C) and EOFError (Ctrl-D)
@@ -34,7 +50,7 @@ def cmdline_reader():
 	except (KeyboardInterrupt, EOFError) as e:
 		print e
 		return ""
-		
+
 	return cmd
 
 def cmd_interpreter(cmd):
