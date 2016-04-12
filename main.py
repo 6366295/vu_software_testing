@@ -83,25 +83,18 @@ def main():
 	print "|-------------------------------------------------|" 
 	print ""
 
+	# Load phonebook into list of PhoneData classes
 	phonebook = parse_phonebook()
 
-	cmdlist = UserCommands(phonebook)
-
-	cmd_dict = {
-		"exit" : cmdlist.cmd_exit,
-		"help" : cmdlist.cmd_help,
-		"call" : cmdlist.cmd_call,
-		"offhook" : cmdlist.cmd_offhook,
-		"onhook" : cmdlist.cmd_onhook,
-		"transfer" : cmdlist.cmd_transfer,
-		"conference" : cmdlist.cmd_conference,
-		"status" : cmdlist.cmd_status
-	}
+	# Pass this lists to the UserCommands, so that the functions can use it
+	user_commands = UserCommands(phonebook)
 
 	while 1:
+		# Get command from commandline
 		cmd = cmdline_reader()
 
-		cmd_interpreter(cmd, cmd_dict)
+		# Execute command based on contents of the commands
+		cmd_interpreter(cmd, user_commands.cmd_dict)
 
 	return 0
 

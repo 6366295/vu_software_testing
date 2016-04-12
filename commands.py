@@ -3,11 +3,20 @@ import sys
 class UserCommands:
 	def __init__(self, phonebook):
 		self.phonebook = phonebook
+		self.cmd_dict = {
+			"exit" : self.cmd_exit,
+			"help" : self.cmd_help,
+			"call" : self.cmd_call,
+			"offhook" : self.cmd_offhook,
+			"onhook" : self.cmd_onhook,
+			"transfer" : self.cmd_transfer,
+			"conference" : self.cmd_conference,
+			"status" : self.cmd_status
+		}
 
 	def cmd_exit(self, *args, **kwargs):
 		for i in range(0, len(self.phonebook)):
 			print self.phonebook[i].name, self.phonebook[i].number
-
 		print kwargs
 
 		sys.exit()
