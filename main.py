@@ -28,7 +28,7 @@ def parse_phonebook():
 					i = i+1
 
 					# Limit phonebook entries number to 20
-					# Ommitted numbers don't count
+					# Ommitted entries don't count
 					if i > 20:
 						break
 				else:
@@ -55,8 +55,8 @@ def cmdline_reader():
 
 def cmd_interpreter(cmd):
 	# Split command string
-	# TODO: This makes exiting using "phone exit phone etc..." possible
-	#         or "exit phone etc..."
+	# TODO: This makes exiting using "phone exit phone" possible
+	#         but not through "exit phone somethiing"
 	cmd = cmd.split(' ')
 
 	# Catch non-existing commands
@@ -67,7 +67,7 @@ def cmd_interpreter(cmd):
 		elif len(cmd) == 2:
 			cmd_dict[cmd[0]](cmd[1], 0)
 		else:
-			cmd_dict[cmd[0]](cmd[1], cmd[2])
+			cmd_dict[cmd[1]](cmd[0], cmd[2])
 	except KeyError as e:
 		return 1
 
