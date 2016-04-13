@@ -33,24 +33,32 @@ class UserCommands:
 		phone1 = kwargs['phone1']
 		phone2 = kwargs['phone2']
 
+		# Check if user input phone1 is in the phonebook
 		if self.phonebook.has_key(phone1):
 			phone1_state = self.phonebook[phone1]
 
+			# If phone1 is onhook, but not ringing.
 			if phone1_state.status == "onhook":
 				if phone1_state.hears != "ringing":
 					phone1_state.hears = "silence"
 					print phone1 + " hears " + phone1_state.hears
+			# If phone1 is offhook
 			else:
+				# Check if user input phone2 is in the phonebook
 				if self.phonebook.has_key(phone2):
 					phone2_state = self.phonebook[phone2]
 
+					# Check if phone1 is already calling someone
 					if phone1_state.hears == "ringback":
 						print phone1 + " is already calling " + phone1_state.phone2
+					# Check if phone1 is already talking with someone
 					elif phone1_state.hears == "talking":
 						print "You are already in a call!"
+					# Check if phone2 isn't offhook, or is getting other responses
 					elif phone2_state.hears == "talking" or phone2_state.hears == "ringing"  or phone2_state.hears == "ringback" or phone2_state.status == "offhook":
 						phone1_state.hears = "busy"
 						print phone1 + " hears " + phone1_state.hears
+					# Call succeeded
 					else:
 						phone1_state.hears = "ringback"
 						phone2_state.hears = "ringing"
@@ -58,15 +66,16 @@ class UserCommands:
 						phone2_state.phone2 = phone1
 						print phone1 + " hears " + phone1_state.hears
 						print phone2 + " hears " + phone2_state.hears
+				# user input phone2 does not exist, so it's an illegal phone
 				else:
 					phone1_state = "denial"
 					print phone1 + " hears " + phone1_state.hears
+		# user input phone1 does not exist in phonebook
 		else:
 			print phone1 + " does not exist!"
 
 	def cmd_offhook(self, *args, **kwargs):
 		# phone is taken offhook and dialtone should be played (responded)
-		# self.phonebook[kwargs['phone']]
 		phone = kwargs['phone']
 
 		if self.phonebook.has_key(phone):
@@ -79,6 +88,7 @@ class UserCommands:
 					phone2 = phone_state.phone2
 					phone2_state = self.phonebook[phone2]
 
+					# Phone is being called in a transfer setting
 					if phone_state.transfer:
 						phone_state.status = "offhook"
 						phone_state.hears = "talking"
@@ -95,6 +105,7 @@ class UserCommands:
 						phone2_state.phone2 = phone
 
 						print phone + " and " + phone2 + " are " + phone_state.hears
+					# Phone is being called in a conference setting
 					elif phone_state.conference:
 						phone_state.status = "offhook"
 						phone_state.hears = "talking"
@@ -109,12 +120,14 @@ class UserCommands:
 						phone3_state.conference = True
 
 						print phone + " and " + phone2 + " and " + phone3 + " are " + phone_state.hears
+					# Phone is being called
 					else:
 						phone_state.status = "offhook"
 						phone_state.hears = "talking"
 						phone2_state.hears = "talking"
 
 						print phone + " and " + phone2 + " are " + phone_state.hears
+				# Offhook without being called
 				else:
 					phone_state.status = "offhook"
 					phone_state.hears = "dialtone"
@@ -125,6 +138,8 @@ class UserCommands:
 	def cmd_onhook(self, *args, **kwargs):
 		# phone is put back on the hook, closing the call, other phone should be
 		# notified if a call was active
+		# TODO: onhooking while conference calling process is still in process
+		#       apparently only the conference initiator will mess up if it onhooks while it started a conference call
 		phone = kwargs['phone']
 
 		if self.phonebook.has_key(phone):
@@ -133,7 +148,11 @@ class UserCommands:
 			if phone_state.status == "onhook":
 				print phone + " is already onhook"
 			else:
+				# Onhooking while phone is talking
 				if phone_state.hears == "talking":
+					# TODO: pre-conference situation
+					#      add a situation where phone is talking
+					#      add a situation where phone is ringing
 					if phone_state.conference:
 						phone2 = phone_state.phone2
 						phone2_state = self.phonebook[phone2]
@@ -163,6 +182,7 @@ class UserCommands:
 							phone3_state.phone3 = None
 
 						print phone2_state.phone2 + " and " + phone3_state.phone2 + " are " + phone2_state.hears
+					# Onhooking while phone is not talking, e.g. in process of being called
 					else:
 						phone2 = phone_state.phone2
 						phone2_state = self.phonebook[phone2]
@@ -174,6 +194,7 @@ class UserCommands:
 						phone2_state.hears = "silence"
 						phone2_state.phone2 = None
 
+						# When there is a transfer
 						if phone_state.transfer:
 							phone2 = phone_state.phone3
 							phone2_state = self.phonebook[phone2]
@@ -185,6 +206,7 @@ class UserCommands:
 							phone2_state.transfer = False
 
 						print phone2 + " hears " + phone2_state.hears
+				# Normal onhooking
 				else:
 					if phone_state.phone2 != None:
 						phone2 = phone_state.phone2
@@ -210,20 +232,26 @@ class UserCommands:
 		if self.phonebook.has_key(phone1):
 			phone1_state = self.phonebook[phone1]
 
+			# Transfer only when already talking
 			if phone1_state.hears != "talking":
 				print "No transfers when you are not in a call!"
+			# Disable transfer in conferences
+			# TODO: enable it?
 			elif phone1_state.conference:
 				print "No transfers when you are in a conference call!"
 			else:
 				if self.phonebook.has_key(phone2):
 					phone2_state = self.phonebook[phone2]
 
+					# phone1 is already calling someone
 					if phone1_state.hears == "ringback":
 						print phone1 + " is already calling " + phone1_state.phone2
+					# phone2 is busy or is offhooked
 					elif phone2_state.hears == "talking" or phone2_state.hears == "ringing"  or phone2_state.hears == "ringback" or phone2_state.status == "offhook":
 						phone1_state.hears = "busy"
 						print phone1 + " hears " + phone1_state.hears
 						phone1_state.hears = "talking"
+					# transfer succesful
 					else:
 						phone1_state.hears = "ringback"
 						phone2_state.hears = "ringing"
@@ -250,8 +278,10 @@ class UserCommands:
 		if self.phonebook.has_key(phone1):
 			phone1_state = self.phonebook[phone1]
 
+			# Conference only possible when already talking
 			if phone1_state.hears != "talking":
 				print "No conferences when you are not in a call!"
+			# Conference not possible with more than three people
 			elif phone1_state.conference:
 				print "Three way conference is the limit!"
 			else:
@@ -259,12 +289,15 @@ class UserCommands:
 					phone2_state = self.phonebook[phone2]
 					phone3_state = self.phonebook[phone1_state.phone2]
 
+					# phone1 is already calling someone, though the previous check already prevents this
 					if phone1_state.hears == "ringback":
 						print phone1 + " is already calling " + phone1_state.phone2
+					# phone2 is busy or offhooked
 					elif phone2_state.hears == "talking" or phone2_state.hears == "ringing"  or phone2_state.hears == "ringback" or phone2_state.status == "offhook":
 						phone1_state.hears = "busy"
 						print phone1 + " hears " + phone1_state.hears
 						phone1_state.hears = "talking"
+					# Conference succesful
 					else:
 						phone1_state.hears = "ringback"
 						phone2_state.hears = "ringing"
