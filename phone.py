@@ -2,20 +2,20 @@ import sys
 
 class Phonebook(dict):
 	def __init__(self, filename):
-		self.filename = filename
+		self.parse_phonebook(filename)
 
-		print "Loading in '" + self.filename + "'"
+	# Load in a phonebook from a file
+	def parse_phonebook(self, filename):
+		print "Loading in '" + filename + "'"
 
-		# Load in a phonebook
 		try:
-			with open(self.filename) as f:
+			with open(filename) as f:
 				for line in f:
 					number, name = line.split(' ', 1)
 					number = number.strip()
 					name = name.strip()
 
 					if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
-						#phonebook[number] = name
 						self.__setitem__((number, name), PhoneState())
 
 						# Limit phonebook entries number to 20
@@ -25,7 +25,7 @@ class Phonebook(dict):
 					else:
 						print "Ommitted entry: [" + str(number) + ", " + str(name) + "]	"
 		except:
-			print "Phonebook file '" + self.filename + "' could not be loaded!"
+			print "Phonebook file '" + filename + "' could not be loaded!"
 			print "Simulation Stopped"
 
 			sys.exit()
@@ -60,19 +60,15 @@ class Phonebook(dict):
 
 '''
  status: onhook or offhook
- hears: silence, dialtone, ringback, ringing, busy, denial
- talking: no, yes, conference
+ hears: silence, dialtone, ringback, ringing, busy, denial, talking
  talkingto: list of connected phones (by names or number (or both?))
 '''
 class PhoneState:
 	def __init__(self):
 		self.status = "onhook"
 		self.hears = "silence"
-		self.talking = "no"
-		self.talkingto = []
-
-	def update_action(self, action):
-		self.action = action
-
-	def update_status(self, status):
-		self.status = status
+		self.hears2 = "silence"
+		self.phone2 = None
+		self.phone3 = None
+		self.transfer = False
+		self.conference = False

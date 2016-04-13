@@ -33,7 +33,7 @@ def cmd_interpreter(cmd, cmd_dict):
 		if len(cmd) == 1:
 			cmd_dict[cmd[0]]()
 		elif len(cmd) == 2:
-			cmd_dict[cmd[0]](phone=cmd[1])
+			cmd_dict[cmd[1]](phone=cmd[0])
 		else:
 			cmd_dict[cmd[1]](phone1=cmd[0], phone2=cmd[2])
 	except KeyError as e:
