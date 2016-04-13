@@ -25,7 +25,7 @@ class UserCommands:
 		# Print the status of all phones and if applicable, who they are talking to
 		for key, value in self.phonebook.iteritems():
 			print key[0], key[1]
-			print "\t", value.status, value.hears, value.phone2, value.phone3
+			print "\t", value.status, value.hears, value.phone2, value.phone3, value.transfer, value.conference
 
 
 	def cmd_call(self, *args, **kwargs):
@@ -87,6 +87,7 @@ class UserCommands:
 						phone2_state.hears = "silence"
 						phone2_state.phone2 = None
 						phone2_state.phone3 = None
+						phone2_state.transfer = False
 						phone_state.transfer = False
 
 						phone2 = phone_state.phone2
@@ -211,6 +212,8 @@ class UserCommands:
 
 			if phone1_state.hears != "talking":
 				print "No transfers when you are not in a call!"
+			elif phone1_state.conference:
+				print "No transfers when you are in a conference call!"
 			else:
 				if self.phonebook.has_key(phone2):
 					phone2_state = self.phonebook[phone2]
@@ -249,9 +252,12 @@ class UserCommands:
 
 			if phone1_state.hears != "talking":
 				print "No conferences when you are not in a call!"
+			elif phone1_state.conference:
+				print "Three way conference is the limit!"
 			else:
 				if self.phonebook.has_key(phone2):
 					phone2_state = self.phonebook[phone2]
+					phone3_state = self.phonebook[phone1_state.phone2]
 
 					if phone1_state.hears == "ringback":
 						print phone1 + " is already calling " + phone1_state.phone2
@@ -264,9 +270,12 @@ class UserCommands:
 						phone2_state.hears = "ringing"
 						phone1_state.phone3 = phone2
 						phone2_state.phone2 = phone1
+						phone3_state.phone3 = phone2
 						print phone1 + " hears " + phone1_state.hears
 						print phone2 + " hears " + phone2_state.hears
+						phone1_state.conference = True
 						phone2_state.conference = True
+						phone3_state.conference = True
 				else:
 					phone1_state = "denial"
 					print phone1 + " hears " + phone1_state.hears
