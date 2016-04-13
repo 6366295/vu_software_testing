@@ -32,6 +32,12 @@ class Phonebook(dict):
 
 		print "Finished loading in " + str(self.__len__()) + " number(s)"
 
+	# This dictionary only takes tuples with length two
+	def __setitem__(self, key, item): 
+		if type(key) == tuple and len(key) == 2:
+			super(Phonebook, self).__setitem__(key, item)
+
+	# This dictionary can get items using one element of a tuple
 	def __getitem__(self, key):
 		try:
 			for k in self.keys():
@@ -42,6 +48,7 @@ class Phonebook(dict):
 		except KeyError as e:
 			return "Phone " + str(e) + " does not exist in phonebook!"
 
+	# This dictionary can check if key is in dictionary using one element of a tuple
 	def has_key(self, k):
 		found = False
 
