@@ -1,19 +1,26 @@
 from commands import UserCommands
-from phone import PhoneData
+from phone import PhoneState
 from phone import Phonebook
 
 import sys
 
-def cmdline_reader():
-	# Catch SIGINTS (Ctrl-C) and EOFError (Ctrl-D)
+'''
+ Function returns string (user input or empty)
+'''
+def cmd_reader():
+	# Catch SIGINTS (Ctrl-C) and EOF (Ctrl-D)
 	try:
 		cmd = raw_input("> ")
 	except (KeyboardInterrupt, EOFError) as e:
 		print e
+
 		return ""
 
 	return cmd
 
+'''
+ Function does nothing of command is not in cmd_dict
+'''
 def cmd_interpreter(cmd, cmd_dict):
 	# Split command string
 	# TODO: This makes exiting using "phone exit phone" possible
@@ -55,7 +62,7 @@ def main():
 
 	while 1:
 		# Get command from commandline
-		cmd = cmdline_reader()
+		cmd = cmd_reader()
 
 		# Execute command based on contents of the commands
 		cmd_interpreter(cmd, user_commands.cmd_dict)

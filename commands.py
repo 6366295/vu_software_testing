@@ -29,7 +29,10 @@ class UserCommands:
 
 	def cmd_status(self, *args, **kwargs):
 		# Print the status of all phones and if applicable, who they are talking to
-		pass
+		for key, value in self.phonebook.iteritems():
+			print key[0], key[1]
+			print "\t", value.status, value.hears, value.talking, value.talkingto
+
 
 	def cmd_call(self, *args, **kwargs):
 		# phone1 will call phone2

@@ -16,7 +16,7 @@ class Phonebook(dict):
 
 					if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
 						#phonebook[number] = name
-						self.__setitem__((number, name), PhoneData())
+						self.__setitem__((number, name), PhoneState())
 
 						# Limit phonebook entries number to 20
 						# Ommitted entries don't count
@@ -40,7 +40,7 @@ class Phonebook(dict):
 
 			return super(Phonebook, self).__getitem__(key)
 		except KeyError as e:
-			return "Phone " + str(e) + " does not exists!"
+			return "Phone " + str(e) + " does not exist in phonebook!"
 
 	def has_key(self, k):
 		found = False
@@ -52,15 +52,17 @@ class Phonebook(dict):
 		return found
 
 '''
- action: user input (call, offhook, onhook, transfer, conference)
- status: hears (dialtone, ringback, ringing, busy, denial, silence, talking, talking2)
- connectedto: list of connected phones (dictionary entry)
+ status: onhook or offhook
+ hears: silence, dialtone, ringback, ringing, busy, denial
+ talking: no, yes, conference
+ talkingto: list of connected phones (by names or number (or both?))
 '''
-class PhoneData:
+class PhoneState:
 	def __init__(self):
-		self.action = "onhook"
-		self.status = ""
-		self.connectedto = []
+		self.status = "onhook"
+		self.hears = "silence"
+		self.talking = "no"
+		self.talkingto = []
 
 	def update_action(self, action):
 		self.action = action
