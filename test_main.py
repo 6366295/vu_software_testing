@@ -1,17 +1,22 @@
 import unittest
-from main import cmd_reader
 from phone import Phonebook
-from StringIO import StringIO
-import sys
 
 class MyTest(unittest.TestCase):
+    def setUp(self):
+        #setup before tests
+        
+    def tearDown(self):
+        #cleanup after tests
+    
     def test(self):
-       try: 
-           out = StringIO()
-           sys.stdout = out
-           phonebook = Phonebook("phoneboo.txt")
-           print(out.getvalue().strip())
-       except Exception:
-           print "error({0}): {1}".format(e.errno, e.strerror)
+           phonebook = Phonebook.__new__(Phonebook)
+           phonebook.parse_phonebook("phonebok.txt")
+           
+    def test2(self):
+           phonebook = Phonebook.__new__(Phonebook)
+           phonebook.parse_phonebook("phonebo.txt")
+            
+           
+        
 
 
