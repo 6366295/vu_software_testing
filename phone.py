@@ -71,6 +71,7 @@ class Phonebook(dict):
         for key in self.keys():
             if k in key:
                 found = True
+                break
 
         return found
 
