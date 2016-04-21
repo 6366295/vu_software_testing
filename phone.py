@@ -4,6 +4,18 @@ class Phonebook(dict):
     def __init__(self, filename):
         self.parse_phonebook(filename)
 
+    def validate_number(self, number):
+    	if number.isdigit() and len(number) == 5:
+    		return True
+    	else:
+    		return False
+
+    def validate_name(self, name):
+    	if name.isalpha() and len(name) <= 12:
+    		return True
+    	else:
+    		return False
+
     # Load in a phonebook from a file
     def parse_phonebook(self, filename):
         print "Loading in '" + filename + "'"
@@ -12,10 +24,11 @@ class Phonebook(dict):
             with open(filename) as f:
                 for line in f:
                     number, name = line.split(' ', 1)
+
                     number = number.strip()
                     name = name.strip()
 
-                    if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
+                    if self.validate_number(number) and self.validate_name(name):
                         self.__setitem__((number, name), PhoneState())
 
                         # Limit phonebook entries number to 20
