@@ -36,6 +36,7 @@ class Phonebook(dict):
 
                     # REQ02, REQ03
                     if self.validate_number(number) and self.validate_name(name):
+                        # REQ15, REQ16
                         self.__setitem__((number, name), PhoneState())
 
                         # REQ01
@@ -56,8 +57,12 @@ class Phonebook(dict):
         # REQ01
         print "! Finished loading in " + str(self.__len__()) + " number(s) \n"
 
+    # REQ15, REQ16
     # This dictionary only takes tuples with length two
     def __setitem__(self, key, item): 
+        if self.has_key(key[0]) or self.has_key(key[1]):
+            return KeyError
+
         if type(key) == tuple and len(key) == 2:
             super(Phonebook, self).__setitem__(key, item)
 
