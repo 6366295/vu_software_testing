@@ -4,12 +4,14 @@ class Phonebook(dict):
     def __init__(self, filename):
         self.parse_phonebook(filename)
 
+    # Check phone number validity
     def validate_number(self, number):
     	if number.isdigit() and len(number) == 5:
     		return True
     	else:
     		return False
 
+    # Check name validity
     def validate_name(self, name):
     	if name.isalpha() and len(name) <= 12:
     		return True
@@ -25,6 +27,7 @@ class Phonebook(dict):
                 for line in f:
                     number, name = line.split(' ', 1)
 
+                    # Remove trailing characters, before validating them
                     number = number.strip()
                     name = name.strip()
 
@@ -37,7 +40,7 @@ class Phonebook(dict):
                             break
                     else:
                         print "Ommitted entry: [" + str(number) + ", " + str(name) + "] "
-        except:
+        except IOError:
             print "Phonebook file '" + filename + "' could not be loaded!"
             print "Simulation Stopped"
 
@@ -80,7 +83,6 @@ class PhoneState:
     def __init__(self):
         self.status = "onhook"
         self.hears = "silence"
-        self.hears2 = "silence"
         self.phone2 = None
         self.phone3 = None
         self.transfer = False
