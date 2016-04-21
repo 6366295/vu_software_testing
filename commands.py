@@ -23,14 +23,24 @@ class UserCommands:
 
     def cmd_status(self, *args, **kwargs):
         # Print the status of all phones and if applicable, who they are talking to
-        print "{0:5}\t| {1:12}\t| {2}".format("Number","Name","State")
-        print 8*'-'+'+'+15*'-'+'+'+55*'-'
+        print "\033[1m{0:5}\t| {1:12}\t| {2:8}| {3:9}| {4:14}|\033[0m".format("Number","Name","State","Hears", "Participant(s)")
+        print 8*'-'+'+'+15*'-'+'+'+9*'-'+'+'+10*'-'+'+'+15*'-'+'+'+18*'-'
         for key, value in self.phonebook.iteritems():
-            print "{0:5}\t| {1:12}\t| {2}".format(key[0], key[1], "{} {} {} {} {} {}".format(str(value.status), str(value.hears), str(value.phone2), str(value.phone3), str(value.transfer), str(value.conference)))
+            if value.transfer:
+                trans_string = "transferring"
+            else:
+                trans_string = ""
+            
+            print "{0:5}\t| {1:12}\t| {2:8}| {3:9}| {4:14}| {5}".format(key[0], key[1], value.status, value.hears, value.phone2, trans_string)
+            if value.phone3 != None:
+                print "{0:5}\t| {0:12}\t| {0:8}| {0:9}| {1:14}| {0}".format("", value.phone3)
+
             # print key[0],"\t", key[1],"\t\t\t", value.status, value.hears, value.phone2, value.phone3, value.transfer, value.conference
             # print "\tState: ", value.status, value.hears, value.phone2, value.phone3, value.transfer, value.conference
-            print "{0:5}\t| {1:12}\t| {2}".format("","","")
-        print 80*'-'
+            print "{0:5}\t| {0:12}\t| {0:8}| {0:9}| {0:14}| {0}".format("")
+            print 8*'-'+'+'+15*'-'+'+'+9*'-'+'+'+10*'-'+'+'+15*'-'+'+'+18*'-'
+            
+        # print 80*'-'
 
     def cmd_call(self, *args, **kwargs):
         # phone1 will call phone2
@@ -70,9 +80,9 @@ class UserCommands:
                         phone2_state.phone2 = phone1
                         print phone1 + " hears " + phone1_state.hears
                         print phone2 + " hears " + phone2_state.hears
-                # user input phone2 does not exist, so it's an illegal phone
+                # user input phone2 does not exist,hon so it's an illegal phone
                 else:
-                    phone1_state = "denial"
+                    phone1_state.hears = "denial"
                     print phone1 + " hears " + phone1_state.hears
         # user input phone1 does not exist in phonebook
         else:
