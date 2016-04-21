@@ -4,6 +4,20 @@ class Phonebook(dict):
     def __init__(self, filename):
         self.parse_phonebook(filename)
 
+    # Check phone number validity
+    def validate_number(self, number):
+    	if number.isdigit() and len(number) == 5:
+    		return True
+    	else:
+    		return False
+
+    # Check name validity
+    def validate_name(self, name):
+    	if name.isalpha() and len(name) <= 12:
+    		return True
+    	else:
+    		return False
+
     # Load in a phonebook from a file
     def parse_phonebook(self, filename):
         print "Loading in '" + filename + "'"
@@ -12,10 +26,12 @@ class Phonebook(dict):
             with open(filename) as f:
                 for line in f:
                     number, name = line.split(' ', 1)
+
+                    # Remove trailing characters, before validating them
                     number = number.strip()
                     name = name.strip()
 
-                    if number.isdigit() and (len(number) == 5) and name.isalpha() and (len(name) <= 12):
+                    if self.validate_number(number) and self.validate_name(name):
                         self.__setitem__((number, name), PhoneState())
 
                         # Limit phonebook entries number to 20
@@ -24,7 +40,7 @@ class Phonebook(dict):
                             break
                     else:
                         print "Ommitted entry: [" + str(number) + ", " + str(name) + "] "
-        except:
+        except IOError:
             print "Phonebook file '" + filename + "' could not be loaded!"
             print "Simulation Stopped"
 
@@ -55,6 +71,7 @@ class Phonebook(dict):
         for key in self.keys():
             if k in key:
                 found = True
+                break
 
         return found
 
@@ -67,7 +84,6 @@ class PhoneState:
     def __init__(self):
         self.status = "onhook"
         self.hears = "silence"
-        self.hears2 = "silence"
         self.phone2 = None
         self.phone3 = None
         self.transfer = False
