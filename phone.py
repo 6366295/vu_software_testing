@@ -2,7 +2,7 @@ import sys
 
 class Phonebook(dict):
     # REQ02
-    # Check phone number validity
+    #   Check phone number validity
     def validate_number(self, number):
     	if number.isdigit() and len(number) == 5:
     		return True
@@ -10,7 +10,7 @@ class Phonebook(dict):
     		return False
 
     # REQ03
-    # Check name validity
+    #   Check name validity
     def validate_name(self, name):
     	if name.isalpha() and len(name) <= 12:
     		return True
@@ -18,7 +18,7 @@ class Phonebook(dict):
     		return False
 
     # REQ01
-    # Load in a phonebook from a file
+    #   Load in a phonebook from a file
     def parse_phonebook(self, filename):
         print "! Loading in '" + filename + "'"
 
@@ -34,18 +34,20 @@ class Phonebook(dict):
                     number = number.strip()
                     name = name.strip()
 
-                    # REQ02, REQ03
+                    # (REQ02, REQ03)
                     if self.validate_number(number) and self.validate_name(name):
-                        # REQ15, REQ16
+                        # (REQ15, REQ16)
                         self.__setitem__((number, name), PhoneState())
 
                         # REQ01
-                        # Limit phonebook entries number to 20
+                        #   Limit phonebook entries to twenty entries
                         # TODO: REQ??
                         # Ommitted entries don't count
                         if self.__len__() > 20:
                             break
                     else:
+                        # REQ01
+                        #   Print list of ommitted entries
                         print "! Ommitted entry: [" + str(number) + ", " + str(name) + "] "
         # TODO: REQ??
         except IOError:
@@ -55,14 +57,17 @@ class Phonebook(dict):
             sys.exit()
 
         # REQ01
+        #   Print loading status
         print "! Finished loading in " + str(self.__len__()) + " number(s) \n"
-
-    # REQ15, REQ16
-    # This dictionary only takes tuples with length two
+    
     def __setitem__(self, key, item): 
+        # REQ15, REQ16
+        #   Dictonary only takes unique names and numbers
         if self.has_key(key[0]) or self.has_key(key[1]):
             return KeyError
 
+        # REQ01
+        #   Dictionary only takes tuples with length two
         if type(key) == tuple and len(key) == 2:
             super(Phonebook, self).__setitem__(key, item)
 

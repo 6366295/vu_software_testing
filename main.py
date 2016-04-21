@@ -54,9 +54,9 @@ def main():
     print " |-------------------------------------------------|" 
     print ""
 
-    # REQ01
-    # Get user specified phonebook filename
-    # Use default phonebook filename, if user did not specify any
+    # REQ01:
+    #   Get user specified phonebook filename
+    #   Use default phonebook filename, if user did not specify any
     try:
         filename = sys.argv[1]
     except IndexError as e:
@@ -66,7 +66,7 @@ def main():
     phonebook = Phonebook()
 
     # REQ01
-    # Read in a file
+    #   Read in a file
     phonebook.parse_phonebook(filename)
 
     # Pass this lists to the UserCommands, so that the functions can use it
