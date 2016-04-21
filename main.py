@@ -44,24 +44,35 @@ def cmd_interpreter(cmd, cmd_dict):
     return 0
 
 def main():
-    print "Welcome to the Telephone Switching Simulation (Alpha)"
-    print ""
-    print "|-------------------------------------------------|" 
-    print "| Enter the 'help' command to learn about all the |" 
-    print "| commands that you can use in this simulator     |"
-    print "|-------------------------------------------------|" 
+    print "|---------------------------------------------------|"
+    print "| Welcome to the Telephone Switching Simulation 1.0 |"
+    print "|---------------------------------------------------|"
+    print "\                     |||''|||                     /"
+    print " |-------------------------------------------------|" 
+    print " | Enter the 'help' command to learn about all the |" 
+    print " | commands that you can use in this simulator     |"
+    print " |-------------------------------------------------|" 
     print ""
 
-    # Load phonebook into list of PhoneData classes
-    # Use a default input, if non is given
+    # REQ01
+    # Get user specified phonebook filename
+    # Use default phonebook filename, if user did not specify any
     try:
-        phonebook = Phonebook(sys.argv[1])
+        filename = sys.argv[1]
     except IndexError as e:
-        phonebook = Phonebook("phonebook.txt")
+        filename = "phonebook.txt"
+
+    # Initialize Phonebook class
+    phonebook = Phonebook()
+
+    # REQ01
+    # Read in a file
+    phonebook.parse_phonebook(filename)
 
     # Pass this lists to the UserCommands, so that the functions can use it
     user_commands = UserCommands(phonebook)
 
+    # CLI loop
     while 1:
         # Get command from commandline
         cmd = cmd_reader()

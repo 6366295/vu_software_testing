@@ -1,9 +1,7 @@
 import sys
 
 class Phonebook(dict):
-    def __init__(self, filename):
-        self.parse_phonebook(filename)
-
+    # REQ02
     # Check phone number validity
     def validate_number(self, number):
     	if number.isdigit() and len(number) == 5:
@@ -11,6 +9,7 @@ class Phonebook(dict):
     	else:
     		return False
 
+    # REQ03
     # Check name validity
     def validate_name(self, name):
     	if name.isalpha() and len(name) <= 12:
@@ -18,35 +17,44 @@ class Phonebook(dict):
     	else:
     		return False
 
+    # REQ01
     # Load in a phonebook from a file
     def parse_phonebook(self, filename):
-        print "Loading in '" + filename + "'"
+        print "! Loading in '" + filename + "'"
 
+        # Catch non-existing filenames
         try:
+            # Open file
             with open(filename) as f:
                 for line in f:
                     number, name = line.split(' ', 1)
 
+                    # TODO: REQ??
                     # Remove trailing characters, before validating them
                     number = number.strip()
                     name = name.strip()
 
+                    # REQ02, REQ03
                     if self.validate_number(number) and self.validate_name(name):
                         self.__setitem__((number, name), PhoneState())
 
+                        # REQ01
                         # Limit phonebook entries number to 20
+                        # TODO: REQ??
                         # Ommitted entries don't count
                         if self.__len__() > 20:
                             break
                     else:
-                        print "Ommitted entry: [" + str(number) + ", " + str(name) + "] "
+                        print "! Ommitted entry: [" + str(number) + ", " + str(name) + "] "
+        # TODO: REQ??
         except IOError:
-            print "Phonebook file '" + filename + "' could not be loaded!"
-            print "Simulation Stopped"
+            print "! Phonebook file '" + filename + "' could not be loaded!"
+            print "! Simulation Stopped"
 
             sys.exit()
 
-        print "Finished loading in " + str(self.__len__()) + " number(s)"
+        # REQ01
+        print "! Finished loading in " + str(self.__len__()) + " number(s) \n"
 
     # This dictionary only takes tuples with length two
     def __setitem__(self, key, item): 
