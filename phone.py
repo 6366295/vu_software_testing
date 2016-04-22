@@ -144,26 +144,28 @@ class PhoneState:
             return True
 
     def check_transfer(self):
+        # Not in call, so no transfers possible
         if self.hears != "talking":
-
-            print "No transfers when you are not in a call!"
+            self.denial_response()
 
             return False
+        # No transfers, when in conference
         elif self.conference:
-            print "No transfers when you are in a conference call!"
+            self.denial_response2()
 
             return False
         else:
             return True
 
     def check_conference(self):
+        # Not in call, so no conference possible
         if self.hears != "talking":
-
-            print "No conferences when you are not in a call!"
+            self.denial_response()
 
             return False
+        # More than three way conference not allowed
         elif self.conference:
-            print "Three way conference is the limit!"
+            self.denial_response2()
 
             return False
         else:
