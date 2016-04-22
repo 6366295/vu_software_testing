@@ -47,6 +47,7 @@ class UserCommands:
             print 8*'-'+'+'+15*'-'+'+'+9*'-'+'+'+10*'-'+'+'+15*'-'+'+'+18*'-'
             
         # print 80*'-'
+        return
 
     def cmd_call(self, *args, **kwargs):
         phone1 = kwargs['phone1']
@@ -67,6 +68,8 @@ class UserCommands:
 
                 return
 
+        return
+
     def cmd_offhook(self, *args, **kwargs):
         # phone is taken offhook and dialtone should be played (responded)
         phone = kwargs['phone']
@@ -80,6 +83,8 @@ class UserCommands:
 
         if phone_state.check_offhook():
             phone_state.offhook_response()
+
+        return
 
     def cmd_onhook(self, *args, **kwargs):
         # phone is put back on the hook, closing the call, other phone should be
@@ -97,6 +102,8 @@ class UserCommands:
 
         if phone_state.check_onhook():
             phone_state.onhook_response()
+
+        return
 
     def cmd_transfer(self, *args, **kwargs):
         # After phone1 and phone2 are talking:
@@ -119,7 +126,9 @@ class UserCommands:
                 else:
                     phone1_state.denial_response2()
 
-                    return       
+                    return
+
+        return
 
     def cmd_conference(self, *args, **kwargs):
         # After phone1 and phone2 are talking:
@@ -143,3 +152,5 @@ class UserCommands:
                     phone1_state.denial_response2()
 
                     return
+
+        return
