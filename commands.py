@@ -4,6 +4,7 @@ class UserCommands:
     def __init__(self, phonebook):
         self.phonebook = phonebook
 
+        # REQ04
         self.cmd_dict = {
             "exit" : self.cmd_exit,
             "help" : self.cmd_help,
@@ -21,6 +22,7 @@ class UserCommands:
     def cmd_help(self, *args, **kwargs):
         pass
 
+    # REQ14
     def cmd_status(self, *args, **kwargs):
         # Print the status of all phones and if applicable, who they are talking to
         print "\033[1m{0:5}\t| {1:12}\t| {2:8}| {3:9}| {4:14}|\033[0m".format("Number","Name","State","Hears", "Participant(s)")

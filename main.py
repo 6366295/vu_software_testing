@@ -8,6 +8,7 @@ import sys
  Function returns string (user input or empty)
 '''
 def cmd_reader():
+    # REQ??
     # Catch SIGINTS (Ctrl-C) and EOF (Ctrl-D)
     try:
         '''
@@ -25,12 +26,12 @@ def cmd_reader():
     return cmd
 
 '''
- Function does nothing of command is not in cmd_dict
+ Function does nothing if command is not in cmd_dict
 '''
 def cmd_interpreter(cmd, cmd_dict):
     # Split command string
     # TODO: This makes exiting using "phone exit phone" possible
-    #         but not through "exit phone somethiing"
+    #       but not through "exit phone somethiing"
     cmd = cmd.split(' ')
 
     # Catch non-existing commands
@@ -41,12 +42,14 @@ def cmd_interpreter(cmd, cmd_dict):
             cmd_dict[cmd[1]](phone=cmd[0])
         else:
             cmd_dict[cmd[1]](phone1=cmd[0], phone2=cmd[2])
+    # TODO: REQ??
     except KeyError as e:
         print "Wrong command or wrong use of the command"
 
         return
 
 def main():
+    # Program opening message
     print "|---------------------------------------------------|"
     print "| Welcome to the Telephone Switching Simulation 1.0 |"
     print "|---------------------------------------------------|"
@@ -57,9 +60,9 @@ def main():
     print " |-------------------------------------------------|" 
     print ""
 
-    # REQ01:
-    #   Get user specified phonebook filename
-    #   Use default phonebook filename, if user did not specify any
+    # REQ01
+    # Get user specified phonebook filename
+    # Use default phonebook filename, if user did not specify any
     try:
         filename = sys.argv[1]
     except IndexError as e:
@@ -69,15 +72,14 @@ def main():
     phonebook = Phonebook()
 
     # REQ01
-    #   Read in a file
     phonebook.parse_phonebook(filename)
 
-    # Pass this lists to the UserCommands, so that the functions can use it
+    # Give phonebook dictionary to UserCommand to use
     user_commands = UserCommands(phonebook)
 
     # CLI loop
     while 1:
-        # Get command from commandline
+        # Get user input command
         cmd = cmd_reader()
 
         # Execute command based on contents of the commands

@@ -3,17 +3,17 @@ import sys
 class Phonebook(dict):
     def __setitem__(self, key, item): 
         # REQ15, REQ16
-        #   Dictonary only takes unique names and numbers
+        # Dictonary only takes unique names and numbers
         if self.has_key(key[0]) or self.has_key(key[1]):
             return KeyError
 
         # REQ01
-        #   Dictionary only takes tuples with length two
+        # Dictionary only takes tuples with length two
         if type(key) == tuple and len(key) == 2:
             super(Phonebook, self).__setitem__(key, item)
 
     # REQ05
-    #   This dictionary can get items using one element of a tuple
+    # This dictionary can get items using one element of a tuple
     def __getitem__(self, key):
         try:
             for k in self.keys():
@@ -25,7 +25,7 @@ class Phonebook(dict):
             return "Phone " + str(e) + " does not exist in phonebook!"
 
     # REQ05
-    #   This dictionary can check if key is in dictionary using one element of a tuple
+    # This dictionary can check if key is in dictionary using one element of a tuple
     def has_key(self, k):
         found = False
 
@@ -37,7 +37,7 @@ class Phonebook(dict):
         return found
 
     # REQ02
-    #   Check phone number validity
+    # Check phone number validity
     def validate_number(self, number):
     	if number.isdigit() and len(number) == 5:
     		return True
@@ -45,7 +45,7 @@ class Phonebook(dict):
     		return False
 
     # REQ03
-    #   Check name validity
+    # Check name validity
     def validate_name(self, name):
     	if name.isalpha() and len(name) <= 12:
     		return True
@@ -53,7 +53,7 @@ class Phonebook(dict):
     		return False
 
     # REQ01
-    #   Load in a phonebook from a file
+    # Load in a phonebook from a file
     def parse_phonebook(self, filename):
         print "! Loading in '" + filename + "'"
 
@@ -75,7 +75,7 @@ class Phonebook(dict):
                         self.__setitem__((number, name), PhoneState(number, name))
 
                         # REQ01
-                        #   Limit phonebook entries to twenty entries
+                        # Limit phonebook entries to twenty entries
                         # TODO: REQ??
                         # Ommitted entries don't count
                         if self.__len__() > 20:
@@ -85,22 +85,27 @@ class Phonebook(dict):
                         #   Print list of ommitted entries
                         print "! Ommitted entry: [" + str(number) + ", " + str(name) + "] "
         # TODO: REQ??
-        except IOError:
+        except (IOError, ValueError):
             print "! Phonebook file '" + filename + "' could not be loaded!"
             print "! Simulation Stopped"
 
             sys.exit()
 
         # REQ01
-        #   Print loading status
+        if self.__len__() < 2:
+            print "! You at least two numbers in order to use this program"
+            print "! Simulation Stopped"
+
+            sys.exit()
+
+        # REQ01
+        # Print loading status
         print "! Finished loading in " + str(self.__len__()) + " number(s) \n"
 
-
-
 '''
+ REQ06
  status: onhook or offhook
  hears: silence, dialtone, ringback, ringing, busy, denial, talking
- talkingto: list of connected phones (by names or number (or both?))
 '''
 class PhoneState:
     def __init__(self, number, name):
@@ -114,6 +119,7 @@ class PhoneState:
         self.connected_phone1 = None
         self.connected_phone2 = None
 
+    # REQ12
     def check_onhook(self):
         if self.status == "onhook" and self.hears == "ringing":
             print self.name + " is being called, offhook to answer"
@@ -127,6 +133,7 @@ class PhoneState:
         else:
             return True
 
+    # REQ13
     def check_offhook(self):
         if self.status == "offhook":
 
@@ -169,6 +176,7 @@ class PhoneState:
             print self.name + " is already talking to " + self.connected_phone1.name                
         elif self.hears == "busy" or self.hears == "denial" or self.hears == "silence":
             print self.name + " already tried to call or have been talking before, onhook and then offhook to try again"
+        # REQ10
         elif phone2_state.status == "offhook" or phone2_state.hears == "ringing":
             self.hears = "busy"
 
@@ -347,6 +355,7 @@ class PhoneState:
     def transfer_response(self, phone2_state):
         if self.hears == "ringback":
             print self.name + " is already transfer calling " + self.connected_phone2.name              
+        # REQ10
         elif phone2_state.status == "offhook" or phone2_state.hears == "ringing":
             self.hears = "busy"
 
@@ -374,6 +383,7 @@ class PhoneState:
     def conference_response(self, phone2_state):
         if self.hears == "ringback":
             print self.name + " is already conference calling " + self.connected_phone2.name              
+        # REQ10
         elif phone2_state.status == "offhook" or phone2_state.hears == "ringing":
             self.hears = "busy"
 
@@ -398,11 +408,13 @@ class PhoneState:
 
         return 1
 
+    # REQ11
     def denial_response(self):
         self.hears = "denial"
 
         print self.name + " hears " + self.hears
 
+    # REQ11
     def denial_response2(self):
         self.hears = "denial"
 
