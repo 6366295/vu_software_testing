@@ -37,7 +37,7 @@ class Phonebook(dict):
                     # (REQ02, REQ03)
                     if self.validate_number(number) and self.validate_name(name):
                         # (REQ15, REQ16)
-                        self.__setitem__((number, name), PhoneState())
+                        self.__setitem__((number, name), PhoneState(number, name))
 
                         # REQ01
                         #   Limit phonebook entries to twenty entries
@@ -71,7 +71,8 @@ class Phonebook(dict):
         if type(key) == tuple and len(key) == 2:
             super(Phonebook, self).__setitem__(key, item)
 
-    # This dictionary can get items using one element of a tuple
+    # REQ05
+    #   This dictionary can get items using one element of a tuple
     def __getitem__(self, key):
         try:
             for k in self.keys():
@@ -82,7 +83,8 @@ class Phonebook(dict):
         except KeyError as e:
             return "Phone " + str(e) + " does not exist in phonebook!"
 
-    # This dictionary can check if key is in dictionary using one element of a tuple
+    # REQ05
+    #   This dictionary can check if key is in dictionary using one element of a tuple
     def has_key(self, k):
         found = False
 
@@ -99,10 +101,311 @@ class Phonebook(dict):
  talkingto: list of connected phones (by names or number (or both?))
 '''
 class PhoneState:
-    def __init__(self):
+    def __init__(self, number, name):
+        self.number = number
+        self.name = name
         self.status = "onhook"
         self.hears = "silence"
         self.phone2 = None
         self.phone3 = None
         self.transfer = False
         self.conference = False
+
+        self.connected_phone1 = None
+        self.connected_phone2 = None
+
+    def check_onhook(self):
+        if self.status == "onhook" and self.hears == "ringing":
+            print self.name + " is being called, offhook to answer"
+
+            return False
+        elif self.status == "onhook" and self.hears == "silence":
+
+            print self.name + " hears " + self.hears
+
+            return False
+        else:
+            return True
+
+    def check_offhook(self):
+        if self.status == "offhook":
+
+            print self.name + " is already offhook"
+
+            return False
+        else:
+            return True
+
+    def check_transfer(self):
+        if self.hears != "talking":
+
+            print "No transfers when you are not in a call!"
+
+            return False
+        elif self.conference:
+            print "No transfers when you are in a conference call!"
+
+            return False
+        else:
+            return True
+
+    def check_conference(self):
+        if self.hears != "talking":
+
+            print "No conferences when you are not in a call!"
+
+            return False
+        elif self.conference:
+            print "Three way conference is the limit!"
+
+            return False
+        else:
+            return True
+
+    def call_response(self, phone2_state):
+        if self.hears == "ringback":
+            print self.name + " is already calling " + self.connected_phone1.name
+        elif self.hears == "talking":
+            print self.name + " is already talking to " + self.connected_phone1.name                
+        elif self.hears == "busy" or self.hears == "denial" or self.hears == "silence":
+            print self.name + " already tried to call or have been talking before, onhook and then offhook to try again"
+        elif phone2_state.status == "offhook" or phone2_state.hears == "ringing":
+            self.hears = "busy"
+
+            print self.name + " hears " + self.hears
+        elif self.hears == "dialtone":
+            self.connected_phone1 = phone2_state
+
+            self.hears = "ringback"
+            self.connected_phone1.hears = "ringing"
+
+            self.connected_phone1.connected_phone1 = self
+
+            print self.name + " hears " + self.hears
+            print self.connected_phone1.name + " hears " + self.connected_phone1.hears
+
+            return 0
+
+        return 1
+
+    def offhook_response(self):
+        if self.hears == "ringing":
+            if self.transfer:
+                self.status = "offhook"
+                self.hears = "talking"
+
+                self.connected_phone2 = self.connected_phone1.connected_phone1
+
+                self.connected_phone1.connected_phone2 = None
+                self.connected_phone1.connected_phone1 = None
+
+                self.connected_phone1.hears = "silence"
+                self.connected_phone1.transfer = False
+
+                print self.connected_phone1.name + " hears " + self.connected_phone1.hears
+
+                self.connected_phone1 = self.connected_phone2
+                self.connected_phone2 = None
+                self.connected_phone1.connected_phone1 = self
+
+                self.transfer = False
+                self.connected_phone1.transfer = False
+                
+                print self.name + " and " + self.connected_phone1.name + " are " + self.hears
+            elif self.conference:
+                self.status = "offhook"
+                self.hears = "talking"
+
+                self.connected_phone2 = self.connected_phone1.connected_phone1
+                self.connected_phone2.connected_phone2 = self
+
+                self.connected_phone1.hears = "talking"
+                
+                print self.name + " and " + self.connected_phone1.name + " and " + self.connected_phone2.name + " are " + self.hears
+            else:
+                self.status = "offhook"
+                self.hears = "talking"
+                self.connected_phone1.hears = "talking"
+
+                print self.name + " and " + self.connected_phone1.name + " are " + self.hears
+        elif self.hears == "silence":
+            self.status = "offhook"
+            self.hears = "dialtone"
+
+            print self.name + " hears " + self.hears
+
+        return 0
+
+    def onhook_response(self):
+        if self.transfer:
+            if self.hears == "talking":
+                self.connected_phone1.connected_phone2.connected_phone1 = None
+                self.connected_phone1.connected_phone2.hears = "silence"
+                self.connected_phone1.connected_phone2.transfer = False
+
+                self.connected_phone1.connected_phone2 = None
+                self.connected_phone1.connected_phone1 = None
+                self.connected_phone1.hears = "silence"
+                self.connected_phone1.transfer = False
+
+                print self.connected_phone1.name + " hears " + self.connected_phone1.hears
+
+                self.connected_phone1 = None
+                self.status = "onhook"
+                self.hears = "silence"
+                self.transfer = False
+            elif self.hears == "ringback":
+                self.connected_phone2.connected_phone1 = None
+                self.connected_phone2.hears = "silence"
+                self.connected_phone2.transfer = False
+
+                self.connected_phone1.connected_phone1 = None
+                self.connected_phone1.hears = "silence"
+                self.connected_phone1.transfer = False
+
+                print self.connected_phone1.name + " hears " + self.connected_phone1.hears
+
+                self.connected_phone1 = None
+                self.connected_phone2 = None
+                self.status = "onhook"
+                self.hears = "silence"
+                self.transfer = False
+        elif self.conference:
+            if self.hears == "talking":
+                if self.connected_phone2 == None:
+                    self.connected_phone1.connected_phone1 = self.connected_phone1.connected_phone2
+                    self.connected_phone1.connected_phone2 = None
+                    self.connected_phone1.connected_phone1.conference = False
+                    self.connected_phone1.conference = False
+                    self.conference = False
+
+                    self.connected_phone1 = None
+                    self.status = "onhook"
+                    self.hears = "silence"
+                else:
+                    print self.connected_phone1.name + " and " + self.connected_phone2.name + " are " + self.hears
+
+                    if self.name == self.connected_phone1.connected_phone1.name:
+                        self.connected_phone1.connected_phone1 = self.connected_phone1.connected_phone2
+                        self.connected_phone1.connected_phone2 = None
+                    elif self.name == self.connected_phone1.connected_phone2.name:
+                        self.connected_phone1.connected_phone2 = None
+
+                    if self.name == self.connected_phone2.connected_phone1.name:
+                        self.connected_phone2.connected_phone1 = self.connected_phone2.connected_phone2
+                        self.connected_phone2.connected_phone2 = None
+                    elif self.name == self.connected_phone2.connected_phone2.name:
+                        self.connected_phone2.connected_phone2 = None
+
+                    self.status = "onhook"
+                    self.hears = "silence"
+                    self.conference = False
+                    self.connected_phone1.conference = False
+                    self.connected_phone2.conference = False
+                    self.connected_phone1 = None
+                    self.connected_phone2 = None
+
+                    print self.name + " hears " + self.hears
+            elif self.hears == "ringback":
+                self.connected_phone1.connected_phone1 = None
+                self.connected_phone2.connected_phone1 = None
+
+                self.connected_phone1.hears = "silence"
+                self.connected_phone2.hears = "silence"
+
+                print self.connected_phone1.name + " hears " + self.connected_phone1.hears
+
+                self.status = "onhook"
+                self.hears = "silence"
+                self.conference = False
+                self.connected_phone1.conference = False
+                self.connected_phone2.conference = False
+                self.connected_phone1 = None
+                self.connected_phone2 = None
+        else:
+            if self.hears == "dialtone" or self.hears == "denial" or self.hears == "busy" or self.hears == "silence":
+                self.status = "onhook"
+                self.hears = "silence"
+            elif self.hears == "ringback":
+                self.connected_phone1.hears = "silence"
+                self.connected_phone1.connected_phone1 = None
+                self.connected_phone1 = None
+
+                self.hears = "silence"
+                self.status = "onhook"
+            elif self.hears == "talking":
+                self.connected_phone1.hears = "silence"
+
+                print self.connected_phone1.name + " hears " + self.connected_phone1.hears
+
+                self.connected_phone1.connected_phone1 = None
+                self.connected_phone1 = None
+
+                self.hears = "silence"
+                self.status = "onhook"
+
+    def transfer_response(self, phone2_state):
+        if self.hears == "ringback":
+            print self.name + " is already transfer calling " + self.connected_phone2.name              
+        elif phone2_state.status == "offhook" or phone2_state.hears == "ringing":
+            self.hears = "busy"
+
+            print self.name + " hears " + self.hears
+
+            self.hears = "talking"
+        else:
+            self.connected_phone2 = phone2_state
+            self.connected_phone2.connected_phone1 = self
+
+            self.hears = "ringback"
+            self.connected_phone2.hears = "ringing"
+
+            print self.name + " hears " + self.hears
+            print self.connected_phone2.name + " hears " + self.connected_phone2.hears
+
+            self.transfer = True
+            self.connected_phone2.transfer = True
+            self.connected_phone1.transfer = True
+
+            return 0
+
+        return 1
+
+    def conference_response(self, phone2_state):
+        if self.hears == "ringback":
+            print self.name + " is already conference calling " + self.connected_phone2.name              
+        elif phone2_state.status == "offhook" or phone2_state.hears == "ringing":
+            self.hears = "busy"
+
+            print self.name + " hears " + self.hears
+
+            self.hears = "talking"
+        else:
+            self.connected_phone2 = phone2_state
+            self.connected_phone2.connected_phone1 = self
+
+            self.hears = "ringback"
+            self.connected_phone2.hears = "ringing"
+
+            print self.name + " hears " + self.hears
+            print self.connected_phone2.name + " hears " + self.connected_phone2.hears
+
+            self.conference = True
+            self.connected_phone2.conference = True
+            self.connected_phone1.conference = True
+
+            return 0
+
+        return 1
+
+    def denial_response(self):
+        self.hears = "denial"
+
+        print self.name + " hears " + self.hears
+
+    def denial_response2(self):
+        self.hears = "denial"
+
+        print self.name + " hears " + self.hears
+
+        self.hears = "talking"
