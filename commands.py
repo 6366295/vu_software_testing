@@ -28,6 +28,8 @@ class UserCommands:
         for key, value in self.phonebook.iteritems():
             if value.transfer:
                 trans_string = "transferring"
+            elif value.conference:
+                trans_string = "conferencing"
             else:
                 trans_string = ""
             
@@ -55,7 +57,7 @@ class UserCommands:
         else:
             print phone1 + " does not exist!"
 
-            return 1
+            return
 
         if phone1_state.check_onhook():
             if self.phonebook.has_key(phone2):
@@ -63,11 +65,7 @@ class UserCommands:
             else:
                 phone1_state.denial_response()
 
-                return 1
-        else:
-            return 1
-
-        return 0
+                return
 
     def cmd_offhook(self, *args, **kwargs):
         # phone is taken offhook and dialtone should be played (responded)
@@ -78,14 +76,10 @@ class UserCommands:
         else:
             print phone1 + " does not exist!"
 
-            return 1
+            return
 
         if phone_state.check_offhook():
             phone_state.offhook_response()
-        else:
-            return 1
-
-        return 0
 
     def cmd_onhook(self, *args, **kwargs):
         # phone is put back on the hook, closing the call, other phone should be
@@ -99,14 +93,10 @@ class UserCommands:
         else:
             print phone1 + " does not exist!"
 
-            return 1
+            return
 
         if phone_state.check_onhook():
             phone_state.onhook_response()
-        else:
-            return 1
-
-        return 0
 
     def cmd_transfer(self, *args, **kwargs):
         # After phone1 and phone2 are talking:
@@ -120,7 +110,7 @@ class UserCommands:
         else:
             print phone1 + " does not exist!"
 
-            return 1
+            return
 
         if phone1_state.check_onhook():
             if phone1_state.check_transfer():
@@ -129,15 +119,7 @@ class UserCommands:
                 else:
                     phone1_state.denial_response2()
 
-                    # change denial back to talking or different response
-
-                    return 1
-            else:
-                return 1
-        else:
-            return 1
-
-        return 0        
+                    return       
 
     def cmd_conference(self, *args, **kwargs):
         # After phone1 and phone2 are talking:
@@ -151,7 +133,7 @@ class UserCommands:
         else:
             print phone1 + " does not exist!"
 
-            return 1
+            return
 
         if phone1_state.check_onhook():
             if phone1_state.check_conference():
@@ -160,12 +142,4 @@ class UserCommands:
                 else:
                     phone1_state.denial_response2()
 
-                    # change denial back to talking or different response
-
-                    return 1
-            else:
-                return 1
-        else:
-            return 1
-
-        return 0
+                    return

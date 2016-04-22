@@ -10,9 +10,13 @@ import sys
 def cmd_reader():
     # Catch SIGINTS (Ctrl-C) and EOF (Ctrl-D)
     try:
-        sys.stdout.write('> ')
-        cmd = sys.stdin.readline().strip()
-        # cmd = raw_input("> ")
+        '''
+        TODO: Not using raw_input gave me a IOError, 
+              when input: Ctrl-C then imediatly Ctrl-D
+        '''
+        # sys.stdout.write('> ')
+        # cmd = sys.stdin.readline().strip()
+        cmd = raw_input("> ")
     except (KeyboardInterrupt, EOFError) as e:
         print e
 
@@ -30,7 +34,6 @@ def cmd_interpreter(cmd, cmd_dict):
     cmd = cmd.split(' ')
 
     # Catch non-existing commands
-    # TODO: No feedback though
     try:
         if len(cmd) == 1:
             cmd_dict[cmd[0]]()
@@ -39,9 +42,9 @@ def cmd_interpreter(cmd, cmd_dict):
         else:
             cmd_dict[cmd[1]](phone1=cmd[0], phone2=cmd[2])
     except KeyError as e:
-        return 1
+        print "Wrong command or wrong use of the command"
 
-    return 0
+        return
 
 def main():
     print "|---------------------------------------------------|"
@@ -79,8 +82,6 @@ def main():
 
         # Execute command based on contents of the commands
         cmd_interpreter(cmd, user_commands.cmd_dict)
-
-    return 0
 
 if __name__ == '__main__':
     main()

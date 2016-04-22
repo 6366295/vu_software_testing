@@ -1,6 +1,41 @@
 import sys
 
 class Phonebook(dict):
+    def __setitem__(self, key, item): 
+        # REQ15, REQ16
+        #   Dictonary only takes unique names and numbers
+        if self.has_key(key[0]) or self.has_key(key[1]):
+            return KeyError
+
+        # REQ01
+        #   Dictionary only takes tuples with length two
+        if type(key) == tuple and len(key) == 2:
+            super(Phonebook, self).__setitem__(key, item)
+
+    # REQ05
+    #   This dictionary can get items using one element of a tuple
+    def __getitem__(self, key):
+        try:
+            for k in self.keys():
+                if key in k:
+                    return super(Phonebook, self).__getitem__(k)
+
+            return super(Phonebook, self).__getitem__(key)
+        except KeyError as e:
+            return "Phone " + str(e) + " does not exist in phonebook!"
+
+    # REQ05
+    #   This dictionary can check if key is in dictionary using one element of a tuple
+    def has_key(self, k):
+        found = False
+
+        for key in self.keys():
+            if k in key:
+                found = True
+                break
+
+        return found
+
     # REQ02
     #   Check phone number validity
     def validate_number(self, number):
@@ -59,41 +94,8 @@ class Phonebook(dict):
         # REQ01
         #   Print loading status
         print "! Finished loading in " + str(self.__len__()) + " number(s) \n"
-    
-    def __setitem__(self, key, item): 
-        # REQ15, REQ16
-        #   Dictonary only takes unique names and numbers
-        if self.has_key(key[0]) or self.has_key(key[1]):
-            return KeyError
 
-        # REQ01
-        #   Dictionary only takes tuples with length two
-        if type(key) == tuple and len(key) == 2:
-            super(Phonebook, self).__setitem__(key, item)
 
-    # REQ05
-    #   This dictionary can get items using one element of a tuple
-    def __getitem__(self, key):
-        try:
-            for k in self.keys():
-                if key in k:
-                    return super(Phonebook, self).__getitem__(k)
-
-            return super(Phonebook, self).__getitem__(key)
-        except KeyError as e:
-            return "Phone " + str(e) + " does not exist in phonebook!"
-
-    # REQ05
-    #   This dictionary can check if key is in dictionary using one element of a tuple
-    def has_key(self, k):
-        found = False
-
-        for key in self.keys():
-            if k in key:
-                found = True
-                break
-
-        return found
 
 '''
  status: onhook or offhook
@@ -106,8 +108,6 @@ class PhoneState:
         self.name = name
         self.status = "onhook"
         self.hears = "silence"
-        self.phone2 = None
-        self.phone3 = None
         self.transfer = False
         self.conference = False
 
