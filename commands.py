@@ -79,7 +79,7 @@ class UserCommands:
         if self.phonebook.has_key(phone):
             phone_state = self.phonebook[phone]
         else:
-            print phone1 + " does not exist!"
+            print phone + " does not exist!"
 
             return
 
@@ -98,7 +98,7 @@ class UserCommands:
         if self.phonebook.has_key(phone):
             phone_state = self.phonebook[phone]
         else:
-            print phone1 + " does not exist!"
+            print phone + " does not exist!"
 
             return
 
