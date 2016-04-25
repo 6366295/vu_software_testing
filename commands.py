@@ -7,7 +7,6 @@ class UserCommands:
         # REQ04
         self.cmd_dict = {
             "exit" : self.cmd_exit,
-            "help" : self.cmd_help,
             "call" : self.cmd_call,
             "offhook" : self.cmd_offhook,
             "onhook" : self.cmd_onhook,
@@ -19,8 +18,6 @@ class UserCommands:
     def cmd_exit(self, *args, **kwargs):
         sys.exit()
 
-    def cmd_help(self, *args, **kwargs):
-        pass
 
     # REQ14
     def cmd_status(self, *args, **kwargs):

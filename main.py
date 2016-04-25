@@ -62,8 +62,6 @@ def main():
     print "|             |___/-----.....-----\___|             |"
     print "\                                                   /"
     print " |-------------------------------------------------|" 
-    print " | Enter the 'help' command to learn about all the |" 
-    print " | commands that you can use in this simulator     |"
     print " |-------------------------------------------------|" 
     print ""
 
