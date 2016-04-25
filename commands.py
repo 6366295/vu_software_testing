@@ -25,8 +25,8 @@ class UserCommands:
     # REQ14
     def cmd_status(self, *args, **kwargs):
         # Print the status of all phones and if applicable, who they are talking to
-        print "\033[1m{0:5}\t| {1:12}\t| {2:8}| {3:9}| {4:14}|\033[0m".format("Number","Name","State","Hears", "Participant(s)")
-        print 8*'-'+'+'+15*'-'+'+'+9*'-'+'+'+10*'-'+'+'+15*'-'+'+'+18*'-'
+        print "\033[1m{0:6} | {1:12} | {2:8} | {3:9} | {4:14} |\033[0m".format("Number","Name","State","Hears", "Participant(s)")
+        print 7*'-'+'+'+14*'-'+'+'+10*'-'+'+'+11*'-'+'+'+16*'-'+'+'+17*'-'
         for key, value in self.phonebook.iteritems():
             if value.transfer:
                 trans_string = "transferring"
@@ -36,17 +36,17 @@ class UserCommands:
                 trans_string = ""
             
             if value.connected_phone1 != None:
-                print "{0:5}\t| {1:12}\t| {2:8}| {3:9}| {4:14}| {5}".format(key[0], key[1], value.status, value.hears, value.connected_phone1.name, trans_string)
+                print "{0:6} | {1:12} | {2:8} | {3:9} | {4:14} | {5}".format(key[0], key[1], value.status, value.hears, value.connected_phone1.name, trans_string)
             else:
-                print "{0:5}\t| {1:12}\t| {2:8}| {3:9}| {4:14}| {5}".format(key[0], key[1], value.status, value.hears, "", trans_string)
+                print "{0:6} | {1:12} | {2:8} | {3:9} | {4:14} | {5}".format(key[0], key[1], value.status, value.hears, "", trans_string)
 
             if value.connected_phone2 != None:
-                print "{0:5}\t| {0:12}\t| {0:8}| {0:9}| {1:14}| {0}".format("", value.connected_phone2.name)
+                print "{0:6} | {0:12} | {0:8} | {0:9} | {1:14} | {0}".format("", value.connected_phone2.name)
 
             # print key[0],"\t", key[1],"\t\t\t", value.status, value.hears, value.phone2, value.phone3, value.transfer, value.conference
             # print "\tState: ", value.status, value.hears, value.phone2, value.phone3, value.transfer, value.conference
-            print "{0:5}\t| {0:12}\t| {0:8}| {0:9}| {0:14}| {0}".format("")
-            print 8*'-'+'+'+15*'-'+'+'+9*'-'+'+'+10*'-'+'+'+15*'-'+'+'+18*'-'
+            print "{0:6} | {0:12} | {0:8} | {0:9} | {0:14} | {0}".format("")
+            print 7*'-'+'+'+14*'-'+'+'+10*'-'+'+'+11*'-'+'+'+16*'-'+'+'+17*'-'
             
         # print 80*'-'
         return

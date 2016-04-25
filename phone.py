@@ -55,7 +55,7 @@ class Phonebook(dict):
     # REQ01
     # Load in a phonebook from a file
     def parse_phonebook(self, filename):
-        print "! Loading in '" + filename + "'"
+        print "!\033[92m Loading in '" + filename + "'\033[0m"
 
         # Catch non-existing filenames
         try:
@@ -83,24 +83,24 @@ class Phonebook(dict):
                     else:
                         # REQ01
                         #   Print list of ommitted entries
-                        print "! Ommitted entry: [" + str(number) + ", " + str(name) + "] "
+                        print "!\033[93m Ommitted entry: \033[0m [" + str(number) + ", " + str(name) + "] "
         # TODO: REQ??
         except (IOError, ValueError):
-            print "! Phonebook file '" + filename + "' could not be loaded!"
-            print "! Simulation Stopped"
+            print "\033[91m! Phonebook file '" + filename + "' could not be loaded!"
+            print "! Simulation Stopped\033[0m"
 
             sys.exit()
 
         # REQ01
         if self.__len__() < 2:
-            print "! You at least two numbers in order to use this program"
-            print "! Simulation Stopped"
+            print "\033[91m! You need at least two numbers in order to use this program"
+            print "! Simulation Stopped\033[0m"
 
             sys.exit()
 
         # REQ01
         # Print loading status
-        print "! Finished loading in " + str(self.__len__()) + " number(s) \n"
+        print "!\033[92m Finished loading in " + str(self.__len__()) + " number(s) \033[0m\n"
 
 '''
  REQ06
@@ -109,6 +109,8 @@ class Phonebook(dict):
 '''
 class PhoneState:
     def __init__(self, number, name):
+        # self.TALKING = "talking"
+        # self.TALKING = "\033[92mtalking\033[39m"
         self.number = number
         self.name = name
         self.status = "onhook"
@@ -145,6 +147,7 @@ class PhoneState:
 
     def check_transfer(self):
         # Not in call, so no transfers possible
+        # if self.hears != self.TALKING:
         if self.hears != "talking":
             self.denial_response()
 
@@ -159,6 +162,7 @@ class PhoneState:
 
     def check_conference(self):
         # Not in call, so no conference possible
+        # if self.hears != self.TALKING:
         if self.hears != "talking":
             self.denial_response()
 
@@ -174,6 +178,7 @@ class PhoneState:
     def call_response(self, phone2_state):
         if self.hears == "ringback":
             print self.name + " is already calling " + self.connected_phone1.name
+        # elif self.hears == self.TALKING:
         elif self.hears == "talking":
             print self.name + " is already talking to " + self.connected_phone1.name                
         elif self.hears == "busy" or self.hears == "denial" or self.hears == "silence":
@@ -202,6 +207,7 @@ class PhoneState:
         if self.hears == "ringing":
             if self.transfer:
                 self.status = "offhook"
+                # self.hears = self.TALKING
                 self.hears = "talking"
 
                 self.connected_phone2 = self.connected_phone1.connected_phone1
@@ -224,17 +230,21 @@ class PhoneState:
                 print self.name + " and " + self.connected_phone1.name + " are " + self.hears
             elif self.conference:
                 self.status = "offhook"
+                # self.hears = self.TALKING
                 self.hears = "talking"
 
                 self.connected_phone2 = self.connected_phone1.connected_phone1
                 self.connected_phone2.connected_phone2 = self
 
+                # self.connected_phone1.hears = self.TALKING
                 self.connected_phone1.hears = "talking"
                 
                 print self.name + " and " + self.connected_phone1.name + " and " + self.connected_phone2.name + " are " + self.hears
             else:
                 self.status = "offhook"
+                # self.hears = self.TALKING
                 self.hears = "talking"
+                # self.connected_phone1.hears = self.TALKING
                 self.connected_phone1.hears = "talking"
 
                 print self.name + " and " + self.connected_phone1.name + " are " + self.hears
@@ -248,6 +258,7 @@ class PhoneState:
 
     def onhook_response(self):
         if self.transfer:
+            # if self.hears == self.TALKING:
             if self.hears == "talking":
                 self.connected_phone1.connected_phone2.connected_phone1 = None
                 self.connected_phone1.connected_phone2.hears = "silence"
@@ -281,6 +292,7 @@ class PhoneState:
                 self.hears = "silence"
                 self.transfer = False
         elif self.conference:
+            # if self.hears == self.TALKING:
             if self.hears == "talking":
                 if self.connected_phone2 == None:
                     self.connected_phone1.connected_phone1 = self.connected_phone1.connected_phone2
@@ -343,6 +355,7 @@ class PhoneState:
 
                 self.hears = "silence"
                 self.status = "onhook"
+            # elif self.hears == self.TALKING:
             elif self.hears == "talking":
                 self.connected_phone1.hears = "silence"
 
@@ -363,6 +376,7 @@ class PhoneState:
 
             print self.name + " hears " + self.hears
 
+            # self.hears = self.TALKING
             self.hears = "talking"
         else:
             self.connected_phone2 = phone2_state
@@ -391,6 +405,7 @@ class PhoneState:
 
             print self.name + " hears " + self.hears
 
+            # self.hears = self.TALKING
             self.hears = "talking"
         else:
             self.connected_phone2 = phone2_state
@@ -422,4 +437,5 @@ class PhoneState:
 
         print self.name + " hears " + self.hears
 
+        # self.hears = self.TALKING
         self.hears = "talking"

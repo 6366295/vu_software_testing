@@ -51,9 +51,16 @@ def cmd_interpreter(cmd, cmd_dict):
 def main():
     # Program opening message
     print "|---------------------------------------------------|"
-    print "| Welcome to the Telephone Switching Simulation 1.0 |"
+    print "|\033[95m Welcome to the Telephone Switching Simulation 1.0 \033[0m|"
     print "|---------------------------------------------------|"
-    print "\                     |||''|||                     /"
+    print "|            \ ___                 ___ /            |"
+    print "|           --|_  \               /  _|--           |"
+    print "|            /  \  |             |  /  \            |"
+    print "|                | |             | |                |"
+    print "|                | |             | |                |"
+    print "|              _/  |             |  \_              |"
+    print "|             |___/-----.....-----\___|             |"
+    print "\                                                   /"
     print " |-------------------------------------------------|" 
     print " | Enter the 'help' command to learn about all the |" 
     print " | commands that you can use in this simulator     |"
