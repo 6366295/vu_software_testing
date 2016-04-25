@@ -39,18 +39,18 @@ class Phonebook(dict):
     # REQ02
     # Check phone number validity
     def validate_number(self, number):
-    	if number.isdigit() and len(number) == 5:
-    		return True
-    	else:
-    		return False
+        if number.isdigit() and len(number) == 5:
+            return True
+        else:
+            return False
 
     # REQ03
     # Check name validity
     def validate_name(self, name):
-    	if name.isalpha() and len(name) <= 12:
-    		return True
-    	else:
-    		return False
+        if name.isalpha() and len(name) <= 12:
+            return True
+        else:
+            return False
 
     # REQ01
     # Load in a phonebook from a file
