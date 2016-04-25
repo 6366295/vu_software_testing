@@ -19,6 +19,7 @@ class MyTest(unittest.TestCase):
     def tearDown(self):
         #cleanup after tests
         sys.stdout = self.saved_out
+
    #Testing cmd_call
    #b1-b2-b4
     def test(self):
@@ -78,7 +79,6 @@ class MyTest(unittest.TestCase):
         phone1 = "foo"
         self.phonebook[phone1].conference = False
         self.phonebook[phone1].check_conference()
-        out = self.out.getvalue().strip()
         self.assertTrue(self.out.getvalue().strip())
 
     #Testing check_offhook
@@ -86,7 +86,7 @@ class MyTest(unittest.TestCase):
     def test8(self):
         phone1 = "foo"
         self.phonebook[phone1].status = "offhook"
-        self.phonebook[phone1].check_offhook()
+        self.assertFalse(self.phonebook[phone1].check_offhook())
         self.assertEqual(phone1 + " is already offhook", self.out.getvalue().strip())
 
     #Testing check_offhook
@@ -96,6 +96,31 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone1].status = "notoffhook"
         self.assertTrue(self.phonebook[phone1].check_offhook())
 
+    #Testing check_onhook
+    #b1-b2-b3
+    def test10(self):
+        phone1 = "foo"
+        self.phonebook[phone1].status = "onhook"
+        self.phonebook[phone1].hears = "ringing"
+        self.assertFalse(self.phonebook[phone1].check_onhook())
+        self.assertEqual(phone1 + " is being called, offhook to answer", self.out.getvalue().strip())
+
+    #Testing check_onhook
+    #b1-b2-b4-b5-b6
+    def test11(self):
+        phone1 = "foo"
+        self.phonebook[phone1].status = "onhook"
+        self.phonebook[phone1].hears = "silence"
+        self.assertFalse(self.phonebook[phone1].check_onhook())
+        self.assertEqual(phone1 + " hears silence", self.out.getvalue().strip())
+
+    #Testing check_onhook
+    #b1-b2-b4-b7
+    def test12(self):
+        phone1 = "foo"
+        self.phonebook[phone1].status = "onhook"
+        self.phonebook[phone1].hears = "notsilence"
+        self.assertTrue(self.phonebook[phone1].check_onhook())
 
 
 
