@@ -23,20 +23,39 @@ class MyTest(unittest.TestCase):
    #b1-b2-b4
     def test(self):
         phone1 = "foooo"
-        self.user_commands.cmd_call(phone1=phone1, phone2="bar")
+        phone2 = "bar"
+        self.user_commands.cmd_call(phone1=phone1, phone2=phone2)
         self.assertEqual(phone1 +  " does not exist!", self.out.getvalue().strip())
     
-    #Testing cmd_call 
-    #b1-b2-b3-b5-b10
+    # #Testing cmd_call 
+    # #b1-b2-b3-b5-b10
     def test2(self):
         phone1 = "foo"
-        self.user_commands.cmd_call(phone1=phone1, phone2="bar")
+        phone2 = "bar"
+        self.user_commands.cmd_call(phone1=phone1, phone2=phone2)
         self.assertEqual(phone1 +  " hears silence", self.out.getvalue().strip())
     
     #Testing cmd_call
     #b1-b2-b3-b5-b6-b7-b10
     def test3(self):
-        pass
+        phone1 = "foo"
+        phone2 = "bar"
+        self.phonebook[phone1].status = "offhook"
+        self.phonebook[phone1].hears = "dialtone"
+        self.user_commands.cmd_call(phone1=phone1, phone2=phone2)
+        self.assertEqual(phone1 + " hears ringback\n"+phone2+" hears ringing", self.out.getvalue().strip())
+     
+     #Testing cmd_call
+     #b1-b2-b3-b5-b6-b8
+    def test4(self):
+        phone1 = "foo"
+        phone2 = "doesnotexist"
+        self.phonebook[phone1].status = "offhook"
+        self.phonebook[phone1].hears = "dialtone"
+        self.user_commands.cmd_call(phone1=phone1, phone2=phone2)
+        self.assertEqual(phone1 +  " hears denial", self.out.getvalue().strip())
+        
+        
         
         
         
