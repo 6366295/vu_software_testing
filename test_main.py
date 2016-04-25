@@ -81,7 +81,20 @@ class MyTest(unittest.TestCase):
         out = self.out.getvalue().strip()
         self.assertTrue(self.out.getvalue().strip())
 
+    #Testing check_offhook
+    #b1-b2
+    def test8(self):
+        phone1 = "foo"
+        self.phonebook[phone1].status = "offhook"
+        self.phonebook[phone1].check_offhook()
+        self.assertEqual(phone1 + " is already offhook", self.out.getvalue().strip())
 
+    #Testing check_offhook
+    #b1-b3
+    def test9(self):
+        phone1 = "foo"
+        self.phonebook[phone1].status = "notoffhook"
+        self.assertTrue(self.phonebook[phone1].check_offhook())
 
 
 
