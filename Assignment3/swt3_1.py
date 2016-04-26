@@ -24,13 +24,13 @@ def main():
         print "Insufficient arguments!"
         print_usage()
     elif sys.argv[1] != "male" and sys.argv[1] != "female":
-        print "Invalid gender"
+        print "Invalid gender!"
         print_usage()
     elif not sys.argv[2].isdigit():
-        print "Age is not an integer" 
+        print "Age is not an integer!" 
         print_usage()
     elif sys.argv[3] != "married" and sys.argv[3] != "unmarried":
-        print "Invalid relationship status"
+        print "Invalid relationship status!"
         print_usage()
 
 
