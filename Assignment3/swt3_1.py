@@ -17,6 +17,18 @@ def print_usage():
 
     sys.exit()
 
+def calculate_rate(person):
+    if person.status == "unmarried" and person.gender == "male" and person.age < 25:
+        person.rate += 1500
+    else:
+        if person.status == "married" or person.gender == "female":
+            person.rate -= 200
+        if person.age >= 50 and person.age <= 65:
+            person.rate -= 100
+
+    print "Insurance rate is: $%d" % (person.rate)
+    
+
 def main():
     # insurance_rate = 500
 
@@ -45,15 +57,9 @@ def main():
     person.age = int(sys.argv[2])
     person.status = sys.argv[3]
 
-    if person.status == "unmarried" and person.gender == "male" and person.age < 25:
-        person.rate += 1500
-    else:
-        if person.status == "married" or person.gender == "female":
-            person.rate -= 200
-        if person.age >= 50 and person.age <= 65:
-            person.rate -= 100
+    calculate_rate(person)
 
-    print "Insurance rate is: $%d" % (person.rate)
+    
 
 
 if __name__ == '__main__':
