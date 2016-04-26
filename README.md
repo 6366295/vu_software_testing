@@ -7,7 +7,7 @@ Your system will make phone calls, as well as perform three-way conferences and 
 ## To do list
 
 * [ ] Formalize requirements specification
-* [ ] Program the program
+* [x] Program the program
 * [ ] Create test plan
 * [ ] Execute test plan
 
