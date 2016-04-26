@@ -235,8 +235,30 @@ class MyTest(unittest.TestCase):
         self.assertEqual(phone1 + " hears " + self.phonebook[phone1].hears + "\n" +
         self.phonebook[phone1].connected_phone1.name + " hears " + self.phonebook[phone1].connected_phone1.hears, self.out.getvalue().strip())
 
+    #Testing check_transfer
+    #b1-b2
+    def test22(self):
+        phone1 = "foo"
+        self.phonebook[phone1].hears = "nottalking"
+        self.assertFalse(self.phonebook[phone1].check_transfer())
+        self.assertEqual(phone1 + " hears denial", self.out.getvalue().strip())
 
+    #Testing check_transfer
+    #b1-b3-b4
+    def test23(self):
+        phone1 = "foo"
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].conference = True
+        self.assertFalse(self.phonebook[phone1].check_transfer())
+        self.assertEqual(phone1 + " hears denial", self.out.getvalue().strip())
 
+    #Testing check_transfer
+    #b1-b3-b5
+    def test24(self):
+        phone1 = "foo"
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].conference = False
+        self.assertTrue(self.phonebook[phone1].check_transfer())
 
 
 
