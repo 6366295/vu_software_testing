@@ -122,6 +122,118 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone1].hears = "notsilence"
         self.assertTrue(self.phonebook[phone1].check_onhook())
 
+    #Testing call_response
+    #b1-b2-b14
+    ##
+    def test13(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        self.phonebook[phone1].hears = "ringback"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        value = self.phonebook[phone1].call_response(self.phonebook[phone2])
+        self.assertEqual(value, 1)
+        self.assertEqual(phone1 + " is already calling " + phone2, self.out.getvalue().strip())
+
+    #Testing call_response
+    #b1-b3-b4-b14
+    def test14(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        value = self.phonebook[phone1].call_response(self.phonebook[phone3])
+        self.assertEqual(value, 1)
+        self.assertEqual(phone1 + " is already talking to " + phone2, self.out.getvalue().strip())
+
+    #Testing call_response
+    #b1-b3-b5-b8-b14
+    def test15(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "busy"
+        value = self.phonebook[phone1].call_response(self.phonebook[phone3])
+        self.assertEqual(value, 1)
+        self.assertEqual(phone1 + " already tried to call or have been talking before, onhook and then offhook to try again", self.out.getvalue().strip())
+
+    #Testing call_response
+    #b1-b3-b5-b6-b8-b14
+    def test16(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "denial"
+        value = self.phonebook[phone1].call_response(self.phonebook[phone3])
+        self.assertEqual(value, 1)
+        self.assertEqual(phone1 + " already tried to call or have been talking before, onhook and then offhook to try again", self.out.getvalue().strip())
+
+    #Testing call_response
+    #b1-b3-b5-b6-b7-b8-b14
+    def test17(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "silence"
+        value = self.phonebook[phone1].call_response(self.phonebook[phone3])
+        self.assertEqual(value, 1)
+        self.assertEqual(phone1 + " already tried to call or have been talking before, onhook and then offhook to try again", self.out.getvalue().strip())
+
+    #Testing call_response
+    #b1-b3-b5-b6-b7-b9-b11-b14
+    def test18(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "notsilence"
+        self.phonebook[phone2].status = "offhook"
+        value = self.phonebook[phone1].call_response(self.phonebook[phone2])
+        self.assertEqual(value, 1)
+        self.assertEqual(self.phonebook[phone1].hears, "busy")
+        self.assertEqual(phone1 + " hears busy", self.out.getvalue().strip())
+
+    #Testing call_response
+    #b1-b3-b5-b6-b7-b9-b10-b11-b14
+    def test19(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "notsilence"
+        self.phonebook[phone2].status = "notoffhook"
+        self.phonebook[phone2].hears = "ringing"
+        value = self.phonebook[phone1].call_response(self.phonebook[phone2])
+        self.assertEqual(value, 1)
+        self.assertEqual(self.phonebook[phone1].hears, "busy")
+        self.assertEqual(phone1 + " hears busy", self.out.getvalue().strip())
+
+    #Testing call_response
+    #b1-b3-b5-b6-b7-b9-b10-b12-b14
+    def test20(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "notsilence"
+        self.phonebook[phone2].status = "notoffhook"
+        self.phonebook[phone2].hears = "notringingordialtone"
+        value = self.phonebook[phone1].call_response(self.phonebook[phone2])
+        self.assertEqual(value, 1)
+
+    #Testing call_response
+    #b1-b3-b5-b6-b7-b9-b10-b12-b13
+    def test21(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone2].status = "notoffhook"
+        self.phonebook[phone1].hears = "dialtone"
+        value = self.phonebook[phone1].call_response(self.phonebook[phone2])
+        self.assertEqual(value, 0)
+        self.assertEqual(self.phonebook[phone1].connected_phone1, self.phonebook[phone2])
+        self.assertEqual(self.phonebook[phone1].hears, "ringback")
+        self.assertEqual(self.phonebook[phone1].connected_phone1.hears, "ringing")
+        self.assertEqual(self.phonebook[phone1].connected_phone1.connected_phone1, self.phonebook[phone1])
+        self.assertEqual(phone1 + " hears " + self.phonebook[phone1].hears + "\n" +
+        self.phonebook[phone1].connected_phone1.name + " hears " + self.phonebook[phone1].connected_phone1.hears, self.out.getvalue().strip())
 
 
 
