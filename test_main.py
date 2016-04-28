@@ -260,13 +260,51 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone1].conference = False
         self.assertTrue(self.phonebook[phone1].check_transfer())
 
+    #Testing cmd_conference
+    #b1-b2-b3-b5-b6-b7-b8-b10
+    def test25(self):
+        phone1 = "foo"
+        phone2 = "test"
+        self.phonebook[phone1].state = "offhook"
+        self.phonebook[phone1].conference = True
+        self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
 
+    #Testing cmd_conference
+    #b1-b2-b3-b5-b6-b7-b9
+    def test26(self):
+        phone1 = "foo"
+        phone2 = "testtttt"
+        self.phonebook[phone1].state = "offhook"
+        self.phonebook[phone1].conference = True
+        self.phonebook[phone1].hears = "talking"
+        self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
+        self.assertEqual(phone1 + " hears denial", self.out.getvalue().strip())
 
+    #Testing cmd_conference
+    #b1-b2-b3-b5-b6-b10
+    def test27(self):
+        phone1 = "foo"
+        phone2 = "test"
+        self.phonebook[phone1].state = "offhook"
+        self.phonebook[phone1].conference = False
+        self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
 
+    #Testing cmd_conference
+    #b1-b2-b3-b5-b10
+    def test28(self):
+        phone1 = "foo"
+        phone2 = "test"
+        self.phonebook[phone1].state = "onhook"
+        self.phonebook[phone1].conference = False
+        self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
 
-
-
-
+    #Testing cmd_conference
+    #b1-b2-b4
+    def test29(self):
+        phone1 = "foooooooo"
+        phone2 = "test"
+        self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
+        self.assertEqual(phone1 + " does not exist!", self.out.getvalue().strip())
 
 
 
