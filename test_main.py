@@ -2,7 +2,7 @@
 import unittest
 from commands import *
 from phone import Phonebook
-from commands import UserCommands
+from main import *
 import sys
 from StringIO import StringIO
 
@@ -305,6 +305,41 @@ class MyTest(unittest.TestCase):
         phone2 = "test"
         self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
         self.assertEqual(phone1 + " does not exist!", self.out.getvalue().strip())
+
+    #Testing cmd_interpreter
+    #b1-b3-b4-b8
+    def test30(self):
+        valid_cmd = "status"
+        invalid_cmd = "callllll"
+        cmd_interpreter(valid_cmd, self.user_commands.cmd_dict)
+        self.assertNotEqual("Wrong command or wrong use of the command", self.out.getvalue().strip())
+
+    #Testing cmd_interpreter
+    #b1-b3-b5-b6-b8
+    def test31(self):
+        x = "call"
+        y = "status"
+        cmd_interpreter(x + " " + y, self.user_commands.cmd_dict)
+
+
+    #Testing cmd_interpreter
+    #b1-b3-b5-b7-b8
+    def test32(self):
+        x = "call"
+        phone1 = "test"
+        phone2 = "foo"
+        cmd_interpreter(phone1 + " " + x + " " + phone2, self.user_commands.cmd_dict)
+
+
+    #Testing cmd_interpreter
+    #b2
+    def test33(self):
+        cmd = "fdjsafadklfasdfs"
+        cmd_interpreter(cmd, self.user_commands.cmd_dict)
+        self.assertEqual("Wrong command or wrong use of the command", self.out.getvalue().strip())
+
+
+
 
 
 
