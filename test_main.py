@@ -352,6 +352,21 @@ class MyTest(unittest.TestCase):
         self.user_commands.cmd_offhook(phone=phone1)
         self.assertEqual(phone1 + " does not exist!", self.out.getvalue().strip())
 
+    #Testing cmd_onhook
+    #b1-b2-b3-b5-b6-b7
+    def test36(self):
+       phone1 = "foo"
+       self.phonebook[phone1].state = "onhook"
+       self.user_commands.cmd_onhook(phone=phone1)
+
+    #Testing cmd_onhook
+    #b1-b2-b4
+    def test37(self):
+        phone1 = "doesnotexist"
+        self.user_commands.cmd_onhook(phone=phone1)
+        self.assertEqual(phone1 + " does not exist!", self.out.getvalue().strip())
+
+
 
 
 
