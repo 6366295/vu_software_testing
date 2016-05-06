@@ -338,6 +338,19 @@ class MyTest(unittest.TestCase):
         cmd_interpreter(cmd, self.user_commands.cmd_dict)
         self.assertEqual("Wrong command or wrong use of the command", self.out.getvalue().strip())
 
+    #Testing cmd_offhook
+    #b1-b2-b3-b5-b6-b7
+    def test34(self):
+       phone1 = "foo"
+       self.phonebook[phone1].state = "offhook"
+       self.user_commands.cmd_offhook(phone=phone1)
+
+    #Testing cmd_offhook
+    #b1-b2-b4
+    def test35(self):
+        phone1 = "doesnotexist"
+        self.user_commands.cmd_offhook(phone=phone1)
+        self.assertEqual(phone1 + " does not exist!", self.out.getvalue().strip())
 
 
 
