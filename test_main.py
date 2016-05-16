@@ -155,7 +155,6 @@ class MyTest(unittest.TestCase):
     #b1-b3-b5-b8-b14
     def test15(self):
         phone1 = "foo"
-        phone2 = "bar"
         phone3 = "test"
         self.phonebook[phone1].hears = "busy"
         value = self.phonebook[phone1].call_response(self.phonebook[phone3])
@@ -166,7 +165,6 @@ class MyTest(unittest.TestCase):
     #b1-b3-b5-b6-b8-b14
     def test16(self):
         phone1 = "foo"
-        phone2 = "bar"
         phone3 = "test"
         self.phonebook[phone1].hears = "denial"
         value = self.phonebook[phone1].call_response(self.phonebook[phone3])
@@ -177,7 +175,6 @@ class MyTest(unittest.TestCase):
     #b1-b3-b5-b6-b7-b8-b14
     def test17(self):
         phone1 = "foo"
-        phone2 = "bar"
         phone3 = "test"
         self.phonebook[phone1].hears = "silence"
         value = self.phonebook[phone1].call_response(self.phonebook[phone3])
@@ -270,7 +267,7 @@ class MyTest(unittest.TestCase):
     def test25(self):
         phone1 = "foo"
         phone2 = "test"
-        self.phonebook[phone1].state = "offhook"
+        self.phonebook[phone1].status = "offhook"
         self.phonebook[phone1].conference = True
         self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
 
@@ -279,7 +276,7 @@ class MyTest(unittest.TestCase):
     def test26(self):
         phone1 = "foo"
         phone2 = "testtttt"
-        self.phonebook[phone1].state = "offhook"
+        self.phonebook[phone1].status = "offhook"
         self.phonebook[phone1].conference = True
         self.phonebook[phone1].hears = "talking"
         self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
@@ -290,7 +287,7 @@ class MyTest(unittest.TestCase):
     def test27(self):
         phone1 = "foo"
         phone2 = "test"
-        self.phonebook[phone1].state = "offhook"
+        self.phonebook[phone1].status = "offhook"
         self.phonebook[phone1].conference = False
         self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
 
@@ -299,7 +296,7 @@ class MyTest(unittest.TestCase):
     def test28(self):
         phone1 = "foo"
         phone2 = "test"
-        self.phonebook[phone1].state = "onhook"
+        self.phonebook[phone1].status = "onhook"
         self.phonebook[phone1].conference = False
         self.user_commands.cmd_conference(phone1=phone1, phone2=phone2)
 
@@ -315,7 +312,6 @@ class MyTest(unittest.TestCase):
     #b1-b3-b4-b8
     def test30(self):
         valid_cmd = "status"
-        invalid_cmd = "callllll"
         cmd_interpreter(valid_cmd, self.user_commands.cmd_dict)
         self.assertNotEqual("Wrong command or wrong use of the command", self.out.getvalue().strip())
 
@@ -335,7 +331,6 @@ class MyTest(unittest.TestCase):
         phone2 = "foo"
         cmd_interpreter(phone1 + " " + x + " " + phone2, self.user_commands.cmd_dict)
 
-
     #Testing cmd_interpreter
     #b2
     def test33(self):
@@ -347,7 +342,7 @@ class MyTest(unittest.TestCase):
     #b1-b2-b3-b5-b6-b7
     def test34(self):
        phone1 = "foo"
-       self.phonebook[phone1].state = "offhook"
+       self.phonebook[phone1].status = "offhook"
        self.user_commands.cmd_offhook(phone=phone1)
 
     #Testing cmd_offhook
@@ -361,7 +356,7 @@ class MyTest(unittest.TestCase):
     #b1-b2-b3-b5-b6-b7
     def test36(self):
        phone1 = "foo"
-       self.phonebook[phone1].state = "onhook"
+       self.phonebook[phone1].status = "onhook"
        self.user_commands.cmd_onhook(phone=phone1)
 
     #Testing cmd_onhook
@@ -557,6 +552,127 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
         self.assertEqual(self.phonebook[phone1].offhook_response(), 0)
         self.assertEqual(self.phonebook[phone1].name + " and " + self.phonebook[phone1].connected_phone1.name + " and " + self.phonebook[phone1].connected_phone2.name + " are " + self.phonebook[phone1].hears, self.out.getvalue().strip())
+
+    #Testing onhook_response
+    #b1-b2-b4-b30
+    def test55(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].transfer = True
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
+        self.phonebook[phone2].connected_phone2 = self.phonebook[phone3]
+        self.phonebook[phone2].hears = "talking"
+        self.phonebook[phone1].onhook_response()
+        self.assertEqual(phone2 + " hears " + self.phonebook[phone2].hears, self.out.getvalue().strip())
+
+
+    #Testing onhook_response
+    #b1-b2-b5-b7-b10
+    def test56(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "ringback"
+        self.phonebook[phone1].transfer = True
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone1].connected_phone2 = self.phonebook[phone3]
+        self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
+        self.phonebook[phone1].onhook_response()
+        self.assertEqual(phone2 + " hears " + self.phonebook[phone2].hears, self.out.getvalue().strip())
+
+    #Testing onhook_respone
+    #b1-b3-b21-b23-b24-b25-b26-b27
+    def test57(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        self.phonebook[phone1].transfer = False
+        self.phonebook[phone1].conference = False
+        self.phonebook[phone1].hears = "ringback"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone1].onhook_response()
+        self.assertEqual(self.phonebook[phone1].status, "onhook")
+
+    #Testing onhook_response
+    #b1-b3-b21-b22-b30
+    def test58(self):
+        phone1 = "foo"
+        self.phonebook[phone1].transfer = False
+        self.phonebook[phone1].conference = False
+        self.phonebook[phone1].hears = "dialtone"
+        self.phonebook[phone1].onhook_response()
+        self.assertEqual(self.phonebook[phone1].status, "onhook")
+        self.assertEqual(self.phonebook[phone1].hears, "silence")
+
+    #Testing onhook_response
+    #b1-b3-b21-b23-b24-b25-b26-b28-b29
+    def test59(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        self.phonebook[phone1].transfer = False
+        self.phonebook[phone1].conference = False
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone1].onhook_response()
+        self.assertEqual(self.phonebook[phone1].status, "onhook")
+        self.assertEqual(self.phonebook[phone1].hears, "silence")
+
+
+    #Testing onhook_response
+    #b1-b3-b6-b9-b12-b13-b16-b17-b20
+    def test60(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].transfer = False
+        self.phonebook[phone1].conference = True
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone2].hears = "talking"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone1].connected_phone2 = self.phonebook[phone3]
+        self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
+        self.phonebook[phone3].connected_phone1 = self.phonebook[phone1]
+        self.phonebook[phone1].onhook_response()
+        self.assertEqual(phone2 + " and " + phone3 + " are " + self.phonebook[phone2].hears + "\n" + phone1 + " hears silence", self.out.getvalue().strip())
+
+
+    #Testing onhook_response
+    #b1-b3-b6-b8-b11
+    def test61(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].transfer = False
+        self.phonebook[phone1].conference = True
+        self.phonebook[phone1].hears = "talking"
+
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone2].hears = "talking"
+        self.phonebook[phone3].hears = "talking"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone1].connected_phone2 = self.phonebook[phone3]
+        self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
+        self.phonebook[phone3].connected_phone1 = self.phonebook[phone1]
+
+        self.phonebook[phone1].onhook_response()
+        self.assertEqual(phone2 + " and "+phone3+" are talking\n"+phone1+" hears silence", self.out.getvalue().strip())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
