@@ -482,6 +482,11 @@ class MyTest(unittest.TestCase):
     def test47(self):
         self.assertEqual("Phone 'doesnotexist' does not exist in phonebook!", self.phonebook.__getitem__("doesnotexist"))
 
+    #Testing has_key
+    #b1-b2-b3-b4
+    def test48(self):
+       self.assertTrue(self.phonebook.has_key("foo"))
+
 
 
 
