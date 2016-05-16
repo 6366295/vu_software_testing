@@ -13,12 +13,16 @@ class MyTest(unittest.TestCase):
         self.phonebook.parse_phonebook("phonebook.txt")
         self.user_commands = UserCommands(self.phonebook)
         self.saved_out = sys.stdout
+        self.saved_inn = sys.stdin
         self.out = StringIO()
+        self.inn = StringIO()
         sys.stdout = self.out
+        sys.stdin = self.inn
 
     def tearDown(self):
         #cleanup after tests
         sys.stdout = self.saved_out
+        sys.stdinn = self.saved_inn
 
    #Testing cmd_call
    #b1-b2-b4
@@ -365,6 +369,63 @@ class MyTest(unittest.TestCase):
         phone1 = "doesnotexist"
         self.user_commands.cmd_onhook(phone=phone1)
         self.assertEqual(phone1 + " does not exist!", self.out.getvalue().strip())
+
+    # #Testing cmd_reader()
+    # #b1-b3
+    # def test38(self):
+    #     self.inn.write("command")
+    #     self.inn.flush()
+    #     self.assertEqual(cmd_reader(), "command")
+
+
+    #Testing cmd_reader()
+    #b1 - b2
+    # def test39(self):
+    #     pass
+
+
+    #Testing cmd_transfer
+    #b1-b2-b3-b5-b6-b7-b8-b10
+    def test40(self):
+        phone1 = "foo"
+        phone2 = "test"
+        self.phonebook[phone1].status = "onhook"
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        # self.phonebook[phone1].transfer_response(self.phonebook[phone2])
+        self.user_commands.cmd_transfer(phone1=phone1, phone2=phone2)
+
+    #Testing cmd_transfer
+    #b1-b2-b4
+    def test41(self):
+        phone1 = "foooo"
+        phone2 = "test"
+        self.user_commands.cmd_transfer(phone1=phone1, phone2=phone2)
+        self.assertEqual( phone1 + " does not exist!", self.out.getvalue().strip())
+
+    #Testing cmd_transfer
+    #b1-b2-b3-b5-b6-b7-b9
+    def test42(self):
+        phone1 = "foo"
+        phone2 = "doesnotexist"
+        phone3 = "test"
+        self.phonebook[phone1].status = "offhook"
+        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone3]
+        self.user_commands.cmd_transfer(phone1=phone1, phone2=phone2)
+        self.assertEqual(phone1 + " hears denial", self.out.getvalue().strip())
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
