@@ -709,6 +709,18 @@ class MyTest(unittest.TestCase):
         name = "1231412"
         self.assertFalse(self.phonebook.validate_name(name))
 
+    #Testing validate_number
+    #b1-b2-b3
+    def test67(self):
+        num = "12345"
+        self.assertTrue(self.phonebook.validate_number(num))
+
+    #Testing validate_number
+    #b1-b4
+    def test68(self):
+        num = "notdigit"
+        self.assertFalse(self.phonebook.validate_number(num))
+
 
 
 
