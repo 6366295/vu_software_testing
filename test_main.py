@@ -472,6 +472,17 @@ class MyTest(unittest.TestCase):
         self.assertTrue(self.phonebook[phone1].connected_phone1.conference)
         self.assertTrue(self.phonebook[phone1].connected_phone2.conference)
 
+    #Testing get_item
+    #b1-b2-b4-b5
+    def test46(self):
+        self.assertTrue(self.phonebook.__getitem__("foo"))
+
+    #Testing get_item
+    #b1-b3
+    def test47(self):
+        self.assertEqual("Phone 'doesnotexist' does not exist in phonebook!", self.phonebook.__getitem__("doesnotexist"))
+
+
 
 
 
