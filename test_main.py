@@ -416,6 +416,61 @@ class MyTest(unittest.TestCase):
         self.assertEqual(phone1 + " hears denial", self.out.getvalue().strip())
 
 
+    #Testing conference_response
+    #b1-b2-b7
+    def test43(self):
+        phone1 = "foo"
+        phone2 = "test"
+        phone3 = "bar"
+        phone4 = "asdf"
+        self.phonebook[phone1].hears = "ringback"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone1].connected_phone2 = self.phonebook[phone3]
+        self.phonebook[phone1].conference_response(self.phonebook[phone4])
+        self.assertEqual(phone1 + " is already conference calling " + self.phonebook[phone1].connected_phone2.name, self.out.getvalue().strip())
+
+    #Testing conference_response
+    #b1-b3-b5-b7
+    def test44(self):
+        phone1 = "foo"
+        phone2 = "test"
+        phone3 = "bar"
+        self.phonebook[phone1].hears = "notringback"
+        self.phonebook[phone1].conference = True
+        self.phonebook[phone2].status = "offhook"
+        self.phonebook[phone2].hears = "talking"
+        self.phonebook[phone2].conference = True
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
+        self.phonebook[phone3].status = "offhook"
+        self.phonebook[phone1].conference_response(self.phonebook[phone3])
+        self.assertEqual(phone1 + " hears busy", self.out.getvalue().strip())
+        self.assertEqual(self.phonebook[phone1].hears, "talking")
+
+    #Testing conference_response
+    #b1-b3-b4-b6
+    def test45(self):
+        phone1 = "foo"
+        phone2 = "test"
+        phone3 = "bar"
+        self.phonebook[phone1].hears = "notringback"
+        self.phonebook[phone1].conference = True
+        self.phonebook[phone2].status = "offhook"
+        self.phonebook[phone2].hears = "talking"
+        self.phonebook[phone2].conference = True
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
+        self.phonebook[phone3].status = "notoffhook"
+        self.phonebook[phone3].hears = "notringing"
+        self.phonebook[phone1].conference_response(self.phonebook[phone3])
+
+        self.assertEqual(self.phonebook[phone1].connected_phone2, self.phonebook[phone3])
+        self.assertEqual(self.phonebook[phone1].connected_phone2.connected_phone1, self.phonebook[phone1])
+        self.assertEqual(self.phonebook[phone1].hears, "ringback")
+        self.assertEqual(self.phonebook[phone1].connected_phone2.hears, "ringing")
+        self.assertTrue(self.phonebook[phone1].conference)
+        self.assertTrue(self.phonebook[phone1].connected_phone1.conference)
+        self.assertTrue(self.phonebook[phone1].connected_phone2.conference)
 
 
 
