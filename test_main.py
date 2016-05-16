@@ -660,6 +660,44 @@ class MyTest(unittest.TestCase):
         self.assertEqual(phone2 + " and "+phone3+" are talking\n"+phone1+" hears silence", self.out.getvalue().strip())
 
 
+    #Testing transfer_response
+    #b1-b2-b7
+    def test62(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "ringback"
+        self.phonebook[phone1].connected_phone2 = self.phonebook[phone2]
+        self.assertEqual(self.phonebook[phone1].transfer_response(self.phonebook[phone2]), 1)
+        self.assertEqual(phone1 + " is already transfer calling " + phone2, self.out.getvalue().strip())
+
+    #Testing transfer_response
+    #b1-b3-b5-b7
+    def test63(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "notringback"
+        self.phonebook[phone1].connected_phone2 = self.phonebook[phone2]
+        self.phonebook[phone2].status = "offhook"
+        self.phonebook[phone1].transfer_response(self.phonebook[phone2])
+        self.assertEqual(phone1 + " hears busy", self.out.getvalue().strip())
+
+    #Testing transfer_response
+    #b1-b3-b4-b6
+    def test64(self):
+        phone1 = "foo"
+        phone2 = "bar"
+        phone3 = "test"
+        self.phonebook[phone1].hears = "notringback"
+        self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
+        self.phonebook[phone2].status = "notoffhook"
+        self.phonebook[phone2].status = "notringing"
+        self.phonebook[phone1].transfer_response(self.phonebook[phone2])
+        self.assertEqual(phone1 +" hears ringback\n"+phone2+" hears ringing", self.out.getvalue().strip())
+
+
+
 
 
 
