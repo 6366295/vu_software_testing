@@ -697,6 +697,19 @@ class MyTest(unittest.TestCase):
         self.assertEqual(phone1 +" hears ringback\n"+phone2+" hears ringing", self.out.getvalue().strip())
 
 
+    #Testing validate_name
+    #b1-b2-b3
+    def test65(self):
+        name = "validname"
+        self.assertTrue(self.phonebook.validate_name(name))
+
+    #Testng validate_name
+    #b1-b4
+    def test66(self):
+        name = "1231412"
+        self.assertFalse(self.phonebook.validate_name(name))
+
+
 
 
 
