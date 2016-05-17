@@ -670,7 +670,6 @@ class MyTest(unittest.TestCase):
     def test63(self):
         phone1 = "foo"
         phone2 = "bar"
-        phone3 = "test"
         self.phonebook[phone1].hears = "notringback"
         self.phonebook[phone1].connected_phone2 = self.phonebook[phone2]
         self.phonebook[phone2].status = "offhook"
@@ -682,7 +681,6 @@ class MyTest(unittest.TestCase):
     def test64(self):
         phone1 = "foo"
         phone2 = "bar"
-        phone3 = "test"
         self.phonebook[phone1].hears = "notringback"
         self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
         self.phonebook[phone2].status = "notoffhook"
