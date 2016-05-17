@@ -566,7 +566,7 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone2].connected_phone2 = self.phonebook[phone3]
         self.phonebook[phone2].hears = "talking"
         self.phonebook[phone1].onhook_response()
-        self.assertEqual(phone2 + " hears " + self.phonebook[phone2].hears, self.out.getvalue().strip())
+        self.assertEqual(phone2 + " hears silence", self.out.getvalue().strip())
 
 
     #Testing onhook_response
@@ -581,7 +581,7 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone1].connected_phone2 = self.phonebook[phone3]
         self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
         self.phonebook[phone1].onhook_response()
-        self.assertEqual(phone2 + " hears " + self.phonebook[phone2].hears, self.out.getvalue().strip())
+        self.assertEqual(phone2 + " hears silence"  , self.out.getvalue().strip())
 
     #Testing onhook_respone
     #b1-b3-b21-b23-b24-b25-b26-b27
@@ -635,7 +635,7 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
         self.phonebook[phone3].connected_phone1 = self.phonebook[phone1]
         self.phonebook[phone1].onhook_response()
-        self.assertEqual(phone2 + " and " + phone3 + " are " + self.phonebook[phone2].hears + "\n" + phone1 + " hears silence", self.out.getvalue().strip())
+        self.assertEqual(phone2 + " and " + phone3 + " are talking" + "\n" + phone1 + " hears silence", self.out.getvalue().strip())
 
 
     #Testing onhook_response
