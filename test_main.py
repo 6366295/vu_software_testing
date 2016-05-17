@@ -650,7 +650,6 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
         self.phonebook[phone1].connected_phone2 = self.phonebook[phone3]
         self.phonebook[phone2].connected_phone1 = self.phonebook[phone1]
-        self.phonebook[phone3].connected_phone1 = self.phonebook[phone1]
 
         self.phonebook[phone1].onhook_response()
         self.assertEqual(phone2+" hears silence", self.out.getvalue().strip())
