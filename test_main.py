@@ -507,7 +507,7 @@ class MyTest(unittest.TestCase):
         self.assertEqual(phone1 + " hears dialtone", self.out.getvalue().strip())
 
     #Testing offhook_response
-    #b1-b4-b5-b7-b9
+    #b1-b4-b5-b9
     def test52(self):
         phone1 = "foo"
         phone2 = "bar"
