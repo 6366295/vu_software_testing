@@ -683,11 +683,9 @@ class MyTest(unittest.TestCase):
         phone2 = "bar"
         self.phonebook[phone1].hears = "notringback"
         self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
-        self.phonebook[phone2].status = "notoffhook"
-        self.phonebook[phone2].status = "notringing"
+        self.phonebook[phone2].status = "hears"
         self.phonebook[phone1].transfer_response(self.phonebook[phone2])
         self.assertEqual(phone1 +" hears ringback\n"+phone2+" hears ringing", self.out.getvalue().strip())
-
 
     #Testing validate_name
     #b1-b2-b3
