@@ -619,7 +619,6 @@ class MyTest(unittest.TestCase):
         self.assertEqual(self.phonebook[phone1].status, "onhook")
         self.assertEqual(self.phonebook[phone1].hears, "silence")
 
-
     #Testing onhook_response
     #b1-b3-b6-b9-b12-b13-b16-b17-b20
     def test60(self):
@@ -637,7 +636,6 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone1].onhook_response()
         self.assertEqual(phone2 + " and " + phone3 + " are talking" + "\n" + phone1 + " hears silence", self.out.getvalue().strip())
 
-
     #Testing onhook_response
     #b1-b3-b6-b8-b11
     def test61(self):
@@ -646,9 +644,7 @@ class MyTest(unittest.TestCase):
         phone3 = "test"
         self.phonebook[phone1].transfer = False
         self.phonebook[phone1].conference = True
-        self.phonebook[phone1].hears = "talking"
-
-        self.phonebook[phone1].hears = "talking"
+        self.phonebook[phone1].hears = "ringback"
         self.phonebook[phone2].hears = "talking"
         self.phonebook[phone3].hears = "talking"
         self.phonebook[phone1].connected_phone1 = self.phonebook[phone2]
@@ -657,8 +653,7 @@ class MyTest(unittest.TestCase):
         self.phonebook[phone3].connected_phone1 = self.phonebook[phone1]
 
         self.phonebook[phone1].onhook_response()
-        self.assertEqual(phone2 + " and "+phone3+" are talking\n"+phone1+" hears silence", self.out.getvalue().strip())
-
+        self.assertEqual(phone2+" hears silence", self.out.getvalue().strip())
 
     #Testing transfer_response
     #b1-b2-b7
