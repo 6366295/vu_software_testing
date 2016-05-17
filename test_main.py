@@ -660,7 +660,6 @@ class MyTest(unittest.TestCase):
     def test62(self):
         phone1 = "foo"
         phone2 = "bar"
-        phone3 = "test"
         self.phonebook[phone1].hears = "ringback"
         self.phonebook[phone1].connected_phone2 = self.phonebook[phone2]
         self.assertEqual(self.phonebook[phone1].transfer_response(self.phonebook[phone2]), 1)
